@@ -4,134 +4,206 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
+  :root {
+    --bg: #06091a;
+    --surface: rgba(255,255,255,0.03);
+    --border: rgba(255,255,255,0.06);
+    --text: #e2e8f0;
+    --text-dim: #64748b;
+    --text-muted: #475569;
+    --green: #22c55e;
+    --green-dim: rgba(34,197,94,0.08);
+    --green-glow: rgba(34,197,94,0.15);
+    --gold: #facc15;
+  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    width: 720pt;
-    height: 405pt;
-    font-family: 'Pretendard', sans-serif;
-    background: #0a0e27;
-    color: #e8eaf6;
-    padding: 28pt 40pt;
+    width: 720pt; height: 405pt;
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 28pt 36pt;
     display: flex;
     flex-direction: column;
-    gap: 16pt;
+    gap: 14pt;
     overflow: hidden;
     position: relative;
+  }
+  .noise {
+    position: absolute; inset: 0; z-index: 0;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    background-size: 128px 128px;
+    pointer-events: none;
   }
   .bg-grid {
     position: absolute; inset: 0;
     background-image:
-      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-    background-size: 30pt 30pt;
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 36pt 36pt;
+    pointer-events: none;
+    mask-image: linear-gradient(to bottom, black 20%, transparent 85%);
+    -webkit-mask-image: linear-gradient(to bottom, black 20%, transparent 85%);
+  }
+  .glow-accent {
+    position: absolute;
+    top: -40pt; left: -40pt;
+    width: 200pt; height: 200pt;
+    background: radial-gradient(circle, var(--green-glow) 0%, transparent 70%);
     pointer-events: none;
   }
+  .slide-num {
+    position: absolute;
+    top: 20pt; right: 28pt;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9pt;
+    color: var(--text-muted);
+    letter-spacing: 1pt;
+    z-index: 3;
+  }
   .header {
-    position: relative; z-index: 1;
+    position: relative; z-index: 2;
     display: flex;
     align-items: baseline;
     gap: 14pt;
   }
   .header h2 {
-    font-size: 30pt;
+    font-size: 32pt;
     font-weight: 900;
-    background: linear-gradient(135deg, #00e676, #00c853);
+    background: linear-gradient(135deg, #4ade80, #22c55e);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20pt var(--green-glow));
   }
   .header .oneliner {
-    font-size: 13pt;
-    color: #90a4ae;
+    font-size: 12pt;
+    color: var(--text-dim);
+    font-weight: 500;
   }
+  /* pipeline flow */
   .flow {
-    position: relative; z-index: 1;
+    position: relative; z-index: 2;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0;
+    padding: 4pt 0;
   }
   .step {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6pt;
-    width: 100pt;
+    gap: 7pt;
+    width: 96pt;
   }
   .step .icon {
-    width: 44pt; height: 44pt;
-    border-radius: 10pt;
+    width: 46pt; height: 46pt;
+    border-radius: 12pt;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 22pt;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    position: relative;
   }
+  .step .icon::after {
+    content: '';
+    position: absolute; inset: -1px;
+    border-radius: 12pt;
+    background: linear-gradient(135deg, rgba(34,197,94,0.15), transparent 60%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .step:hover .icon::after { opacity: 1; }
   .step .label {
     font-size: 11pt;
     font-weight: 700;
     text-align: center;
+    color: var(--text);
   }
   .step .sub {
     font-family: 'JetBrains Mono', monospace;
     font-size: 8pt;
-    color: #78909c;
+    color: var(--text-muted);
+    letter-spacing: 0.3pt;
   }
   .arrow {
-    font-size: 16pt;
-    color: #ffd600;
-    margin: 0 4pt;
-    padding-bottom: 20pt;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14pt;
+    color: var(--gold);
+    margin: 0 2pt;
+    padding-bottom: 22pt;
+    opacity: 0.6;
   }
+  /* feature cards */
   .bottom-row {
-    position: relative; z-index: 1;
+    position: relative; z-index: 2;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16pt;
+    gap: 14pt;
   }
   .feature-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 10pt;
-    padding: 18pt;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12pt;
+    padding: 18pt 20pt;
     display: flex;
     flex-direction: column;
-    gap: 6pt;
+    gap: 8pt;
   }
   .feature-card .title {
     font-size: 13pt;
     font-weight: 700;
-    color: #ffd600;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 6pt;
+  }
+  .feature-card .title::before {
+    content: '';
+    width: 3pt; height: 14pt;
+    border-radius: 2pt;
+    background: var(--gold);
+    opacity: 0.5;
   }
   .feature-card .desc {
     font-size: 10pt;
-    color: #b0bec5;
-    line-height: 1.5;
+    color: var(--text-dim);
+    line-height: 1.6;
   }
+  /* tech tags */
   .tech-row {
-    position: relative; z-index: 1;
+    position: relative; z-index: 2;
     display: flex;
     justify-content: center;
-    gap: 10pt;
+    gap: 8pt;
     flex-wrap: wrap;
   }
   .tech-tag {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9pt;
-    color: #b0bec5;
+    font-size: 8pt;
+    font-weight: 600;
+    color: var(--text-dim);
     padding: 4pt 10pt;
-    border-radius: 4pt;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20pt;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    letter-spacing: 0.3pt;
   }
 </style>
 </head>
 <body>
+  <div class="noise"></div>
+  <div class="glow-accent"></div>
   <div class="bg-grid"></div>
+  <div class="slide-num">03 / 05</div>
   <div class="header">
     <h2>솔루션</h2>
-    <div class="oneliner">Slack 링크 자동 요약 & 카드뉴스</div>
+    <div class="oneliner">LinkDigest — Slack 링크 자동 요약 & 카드뉴스</div>
   </div>
   <div class="flow">
     <div class="step">

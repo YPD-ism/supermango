@@ -4,134 +4,192 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
+  :root {
+    --bg: #06091a;
+    --surface: rgba(255,255,255,0.03);
+    --border: rgba(255,255,255,0.06);
+    --text: #e2e8f0;
+    --text-dim: #64748b;
+    --text-muted: #475569;
+    --purple: #a855f7;
+    --purple-glow: rgba(168,85,247,0.12);
+    --gold: #facc15;
+    --gold-dim: rgba(250,204,21,0.08);
+  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    width: 720pt;
-    height: 405pt;
-    font-family: 'Pretendard', sans-serif;
-    background: #0a0e27;
-    color: #e8eaf6;
-    padding: 28pt 40pt;
+    width: 720pt; height: 405pt;
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 28pt 36pt;
     display: flex;
     flex-direction: column;
-    gap: 16pt;
+    gap: 14pt;
     overflow: hidden;
     position: relative;
+  }
+  .noise {
+    position: absolute; inset: 0; z-index: 0;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    background-size: 128px 128px;
+    pointer-events: none;
   }
   .bg-grid {
     position: absolute; inset: 0;
     background-image:
-      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-    background-size: 30pt 30pt;
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 36pt 36pt;
+    pointer-events: none;
+    mask-image: linear-gradient(to bottom, black 20%, transparent 85%);
+    -webkit-mask-image: linear-gradient(to bottom, black 20%, transparent 85%);
+  }
+  .glow-accent {
+    position: absolute;
+    top: -40pt; left: -40pt;
+    width: 200pt; height: 200pt;
+    background: radial-gradient(circle, var(--purple-glow) 0%, transparent 70%);
     pointer-events: none;
   }
+  .slide-num {
+    position: absolute;
+    top: 20pt; right: 28pt;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9pt;
+    color: var(--text-muted);
+    letter-spacing: 1pt;
+    z-index: 3;
+  }
   .header h2 {
-    position: relative; z-index: 1;
-    font-size: 30pt;
+    position: relative; z-index: 2;
+    font-size: 32pt;
     font-weight: 900;
-    background: linear-gradient(135deg, #e040fb, #aa00ff);
+    background: linear-gradient(135deg, #c084fc, #a855f7);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20pt var(--purple-glow));
   }
   .main-grid {
-    position: relative; z-index: 1;
+    position: relative; z-index: 2;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16pt;
+    gap: 14pt;
   }
   .card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 10pt;
-    padding: 18pt;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12pt;
+    padding: 18pt 20pt;
     display: flex;
     flex-direction: column;
-    gap: 10pt;
+    gap: 12pt;
   }
   .card .card-title {
-    font-size: 13pt;
+    font-size: 12pt;
     font-weight: 700;
-    color: #ffd600;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 6pt;
+    letter-spacing: 0.3pt;
   }
   .card ul {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 6pt;
+    gap: 7pt;
   }
   .card li {
     font-size: 10pt;
-    color: #b0bec5;
+    color: var(--text-dim);
     line-height: 1.4;
-    padding-left: 12pt;
+    padding-left: 14pt;
     position: relative;
   }
   .card li::before {
-    content: '▸';
+    content: '';
     position: absolute;
-    left: 0;
-    color: #78909c;
+    left: 0; top: 5pt;
+    width: 4pt; height: 4pt;
+    border-radius: 50%;
+    background: var(--purple);
+    opacity: 0.5;
   }
-  .card li strong { color: #e8eaf6; }
+  .card li strong {
+    color: var(--text);
+    font-weight: 700;
+  }
+  /* loop section */
   .loop-section {
-    position: relative; z-index: 1;
-    background: rgba(255,214,0,0.06);
-    border: 1px solid rgba(255,214,0,0.15);
-    border-radius: 10pt;
-    padding: 18pt;
+    position: relative; z-index: 2;
+    background: var(--gold-dim);
+    border: 1px solid rgba(250,204,21,0.12);
+    border-radius: 12pt;
+    padding: 18pt 24pt;
     display: flex;
     flex-direction: column;
     gap: 12pt;
   }
   .loop-section .card-title {
-    font-size: 13pt;
+    font-size: 12pt;
     font-weight: 700;
-    color: #ffd600;
+    color: var(--gold);
+    letter-spacing: 0.3pt;
   }
   .loop-flow {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8pt;
+    gap: 6pt;
   }
   .loop-node {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11pt;
+    font-size: 10pt;
     font-weight: 700;
-    padding: 8pt 14pt;
-    border-radius: 6pt;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.12);
-    color: #e8eaf6;
+    padding: 7pt 14pt;
+    border-radius: 8pt;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    letter-spacing: 0.3pt;
   }
   .loop-node.active {
-    background: rgba(255,214,0,0.15);
-    border-color: rgba(255,214,0,0.3);
-    color: #ffd600;
+    background: rgba(250,204,21,0.1);
+    border-color: rgba(250,204,21,0.25);
+    color: var(--gold);
+    box-shadow: 0 0 16pt rgba(250,204,21,0.08);
   }
   .loop-arrow {
-    font-size: 14pt;
-    color: #ffd600;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12pt;
+    color: var(--gold);
+    opacity: 0.5;
   }
   .loop-desc {
-    font-size: 10pt;
-    color: #90a4ae;
+    font-size: 9pt;
+    color: var(--text-dim);
     text-align: center;
-    line-height: 1.5;
+    line-height: 1.6;
   }
   .loop-desc code {
     font-family: 'JetBrains Mono', monospace;
-    background: rgba(255,255,255,0.08);
-    padding: 2pt 6pt;
-    border-radius: 3pt;
-    color: #ffd600;
+    background: rgba(250,204,21,0.08);
+    padding: 2pt 7pt;
+    border-radius: 4pt;
+    color: var(--gold);
+    font-size: 9pt;
+    font-weight: 600;
   }
 </style>
 </head>
 <body>
+  <div class="noise"></div>
+  <div class="glow-accent"></div>
   <div class="bg-grid"></div>
+  <div class="slide-num">04 / 05</div>
   <div class="header">
     <h2>나의 랄프 세팅</h2>
   </div>
