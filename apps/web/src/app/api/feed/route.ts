@@ -23,19 +23,39 @@ export async function GET(request: Request) {
     MAX_PAGE_SIZE
   );
 
+  const workspaceId = searchParams.get("workspace_id");
+  const channelId = searchParams.get("channel_id");
+  const tag = searchParams.get("tag");
+
+  // Build dynamic select: use !inner joins when filtering on related tables
+  const channelJoin = workspaceId ? "channel!inner:channel_id" : "channel:channel_id";
+  const tagsJoin = tag ? "tags!inner" : "tags";
+
   let query = supabase
     .from("messages")
     .select(
       `
       *,
       user:user_id(id, display_name, avatar_url),
-      channel:channel_id(id, name, workspace_id),
+      ${channelJoin}(id, name, workspace_id),
       urls(id, url, title, position),
-      tags(id, name)
+      ${tagsJoin}(id, name)
     `
     )
     .eq("status", "complete")
     .order("created_at", { ascending: false })
+
+  if (workspaceId) {
+    query = query.eq("channel.workspace_id", workspaceId);
+  }
+
+  if (channelId) {
+    query = query.eq("channel_id", channelId);
+  }
+
+  if (tag) {
+    query = query.eq("tags.name", tag);
+  }
 
   if (cursor) {
     query = query.lt("created_at", cursor);

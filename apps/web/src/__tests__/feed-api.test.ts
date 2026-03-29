@@ -7,6 +7,7 @@ const mockEq = vi.fn();
 const mockOrder = vi.fn();
 const mockLimit = vi.fn();
 const mockLt = vi.fn();
+const mockIn = vi.fn();
 const mockGetUser = vi.fn();
 
 // Chain builder: each method returns `chain` so calls can be chained in any order
@@ -16,6 +17,7 @@ chain.eq = mockEq.mockReturnValue(chain);
 chain.order = mockOrder.mockReturnValue(chain);
 chain.limit = mockLimit.mockReturnValue(chain);
 chain.lt = mockLt.mockReturnValue(chain);
+chain.in = mockIn.mockReturnValue(chain);
 
 const mockFrom = vi.fn().mockReturnValue(chain);
 
@@ -82,6 +84,7 @@ describe("GET /api/feed", () => {
     mockOrder.mockReturnValue(chain);
     mockLimit.mockReturnValue(chain);
     mockLt.mockReturnValue(chain);
+    mockIn.mockReturnValue(chain);
     mockGetUser.mockResolvedValue({
       data: { user: { id: "auth-user-1" } },
       error: null,
@@ -237,6 +240,77 @@ describe("GET /api/feed", () => {
     );
     expect(mockSelect).toHaveBeenCalledWith(
       expect.stringContaining("tags")
+    );
+  });
+
+  it("filters by workspace_id when provided", async () => {
+    mockLimit.mockResolvedValue({ data: [], error: null });
+
+    const { GET } = await import("@/app/api/feed/route");
+    await GET(makeFeedRequest({ workspace_id: "ws-123" }));
+
+    expect(mockEq).toHaveBeenCalledWith("channel.workspace_id", "ws-123");
+  });
+
+  it("filters by channel_id when provided", async () => {
+    mockLimit.mockResolvedValue({ data: [], error: null });
+
+    const { GET } = await import("@/app/api/feed/route");
+    await GET(makeFeedRequest({ channel_id: "ch-456" }));
+
+    expect(mockEq).toHaveBeenCalledWith("channel_id", "ch-456");
+  });
+
+  it("filters by tag when provided", async () => {
+    mockLimit.mockResolvedValue({ data: [], error: null });
+
+    const { GET } = await import("@/app/api/feed/route");
+    await GET(makeFeedRequest({ tag: "개발" }));
+
+    expect(mockEq).toHaveBeenCalledWith("tags.name", "개발");
+  });
+
+  it("applies all filters together when provided", async () => {
+    mockLimit.mockResolvedValue({ data: [], error: null });
+
+    const { GET } = await import("@/app/api/feed/route");
+    await GET(makeFeedRequest({ workspace_id: "ws-1", channel_id: "ch-1", tag: "AI" }));
+
+    expect(mockEq).toHaveBeenCalledWith("channel.workspace_id", "ws-1");
+    expect(mockEq).toHaveBeenCalledWith("channel_id", "ch-1");
+    expect(mockEq).toHaveBeenCalledWith("tags.name", "AI");
+  });
+
+  it("does not apply workspace filter when param is missing", async () => {
+    mockLimit.mockResolvedValue({ data: [], error: null });
+
+    const { GET } = await import("@/app/api/feed/route");
+    await GET(makeFeedRequest());
+
+    // eq is called for status only, not for workspace
+    const eqCalls = mockEq.mock.calls.map((c: unknown[]) => c[0]);
+    expect(eqCalls).not.toContain("channel.workspace_id");
+  });
+
+  it("uses inner join on channel when workspace filter is applied", async () => {
+    mockLimit.mockResolvedValue({ data: [], error: null });
+
+    const { GET } = await import("@/app/api/feed/route");
+    await GET(makeFeedRequest({ workspace_id: "ws-1" }));
+
+    expect(mockSelect).toHaveBeenCalledWith(
+      expect.stringContaining("channel!inner:channel_id")
+    );
+  });
+
+  it("uses inner join on tags when tag filter is applied", async () => {
+    mockLimit.mockResolvedValue({ data: [], error: null });
+
+    const { GET } = await import("@/app/api/feed/route");
+    await GET(makeFeedRequest({ tag: "개발" }));
+
+    expect(mockSelect).toHaveBeenCalledWith(
+      expect.stringContaining("tags!inner")
     );
   });
 });
