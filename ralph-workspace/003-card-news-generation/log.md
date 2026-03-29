@@ -37,3 +37,26 @@
 - **Spec alignment:** PASS — matches architecture (server-side rendering via satori+resvg), design direction (deep navy + yellow), and demo scenario flow
 - **CLAUDE.md update:** N/A — no new project-wide patterns discovered
 - **Task DONE**
+
+### [Coder] Round 2
+- **Task:** 카드뉴스 업로드 및 Slack 게시
+- **Status:** DONE
+- **Files changed:**
+  - `apps/slack-bot/src/card-news-publisher.ts` — new module: uploadCardImages (Supabase Storage) + updateMessageWithCardImages (DB status update)
+  - `apps/slack-bot/src/__tests__/card-news-publisher.test.ts` — 7 tests for upload and DB update
+  - `apps/slack-bot/src/index.ts` — integrated card news pipeline after summary success
+- **What was done:**
+  - Created `card-news-publisher.ts` with two functions:
+    - `uploadCardImages(buffers, teamId, channelId, messageTs)` — uploads PNG buffers to Supabase Storage `card-images` bucket with path `{teamId}/{channelId}/{messageTs}/card-{N}.png`, returns public URLs
+    - `updateMessageWithCardImages(slackMessageTs, imageUrls)` — finds message by `slack_message_ts`, updates `card_images` array and sets `status` to `complete`
+  - Integrated into `index.ts` message handler: after summary ✅, generates card images → uploads to Storage → posts each image to Slack thread (image blocks) → adds 🖼️ (`frame_with_picture`) reaction → updates DB
+  - Card news pipeline is isolated in try-catch — failure does not affect summary (✅ stays)
+  - DB update is also best-effort (inner try-catch) — Slack posting succeeds even if DB update fails
+- **Self-validation:**
+  - ✅ 이미지가 Supabase Storage `card-images` 버킷에 업로드된다 — test verifies `storage.from("card-images")` and upload calls
+  - ✅ 공개 URL이 생성된다 — test verifies `getPublicUrl()` returns URLs
+  - ✅ Slack 스레드에 이미지가 게시된다 — `client.chat.postMessage` with `thread_ts` and image blocks in index.ts
+  - ✅ 🖼️ 리액션이 추가된다 — `client.reactions.add({ name: "frame_with_picture" })` after posting images
+  - ✅ DB의 message 상태가 complete로 업데이트되고 이미지 URL이 저장된다 — test verifies update with `{ card_images, status: "complete" }`
+  - ✅ 카드뉴스 생성 실패 시에도 요약은 유지된다 — card news block wrapped in try-catch after ✅ reaction
+- **CLAUDE.md update:** N/A — no new project-wide patterns; Supabase Storage usage follows existing db.ts patterns
