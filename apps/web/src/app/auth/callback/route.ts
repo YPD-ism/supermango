@@ -20,13 +20,8 @@ export async function GET(request: Request) {
   // Link auth user to public.users by matching Slack identity
   const { data: { user } } = await supabase.auth.getUser();
   if (user) {
-    const slackIdentity = user.identities?.find(
-      (i) => i.provider === "slack_oidc"
-    );
-    const slackUserId =
-      slackIdentity?.identity_data?.["https://slack.com/user_id"] ??
-      slackIdentity?.identity_data?.provider_id ??
-      slackIdentity?.id;
+    const meta = user.user_metadata as Record<string, unknown> | undefined;
+    const slackUserId = meta?.provider_id as string | undefined;
 
     if (slackUserId) {
       const serviceClient = createSupabaseServiceClient();
