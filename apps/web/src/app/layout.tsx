@@ -1,5 +1,19 @@
 import type { Metadata } from "next";
-import { colors, fonts } from "@/lib/theme";
+import { Space_Mono, Outfit } from "next/font/google";
+import { colors } from "@/lib/theme";
+
+const spaceMono = Space_Mono({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
+});
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  weight: ["400", "600", "800", "900"],
+  display: "swap",
+  variable: "--font-outfit",
+});
 
 export const metadata: Metadata = {
   title: "LinkDigest",
@@ -12,13 +26,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko">
+    <html lang="ko" className={`${spaceMono.className} ${outfit.variable}`}>
       <body
         style={{
           margin: 0,
           backgroundColor: colors.bgDeep,
           color: colors.textPrimary,
-          fontFamily: fonts.mono,
         }}
       >
         {children}

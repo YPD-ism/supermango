@@ -16,8 +16,6 @@ export default function LandingPage() {
       }}
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@400;600;800;900&display=swap');
-
         @keyframes blink {
           0%, 100% { opacity: 1; }
           50% { opacity: 0; }
@@ -31,8 +29,8 @@ export default function LandingPage() {
           to { opacity: 1; transform: translateX(0); }
         }
         @keyframes pulseGlow {
-          0%, 100% { box-shadow: 0 0 20px rgba(250, 204, 21, 0.15); }
-          50% { box-shadow: 0 0 40px rgba(250, 204, 21, 0.3); }
+          0%, 100% { box-shadow: 0 0 20px ${colors.accentGlowMd}; }
+          50% { box-shadow: 0 0 40px ${colors.accentShadow}; }
         }
         @keyframes gridPulse {
           0%, 100% { opacity: 0.03; }
@@ -44,7 +42,7 @@ export default function LandingPage() {
         }
         .feature-card:hover {
           border-color: ${colors.accentBorder} !important;
-          background-color: rgba(250, 204, 21, 0.04) !important;
+          background-color: ${colors.accentHover} !important;
         }
       `}</style>
 
@@ -73,7 +71,7 @@ export default function LandingPage() {
           width: "60vw",
           height: "60vw",
           borderRadius: "50%",
-          background: `radial-gradient(circle, rgba(250, 204, 21, 0.06) 0%, transparent 70%)`,
+          background: `radial-gradient(circle, ${colors.accentGlow} 0%, transparent 70%)`,
           pointerEvents: "none",
         }}
       />
@@ -114,7 +112,7 @@ export default function LandingPage() {
         {/* Main heading */}
         <h1
           style={{
-            fontFamily: "'Outfit', sans-serif",
+            fontFamily: fonts.display,
             fontSize: "clamp(2.5rem, 8vw, 4.5rem)",
             fontWeight: 900,
             letterSpacing: "-0.03em",
@@ -130,7 +128,7 @@ export default function LandingPage() {
           <span
             style={{
               color: colors.accent,
-              textShadow: "0 0 40px rgba(250, 204, 21, 0.2)",
+              textShadow: `0 0 40px ${colors.accentBorder}`,
             }}
           >
             요약은 맡기세요
@@ -140,7 +138,7 @@ export default function LandingPage() {
         {/* Subheading */}
         <p
           style={{
-            fontFamily: "'Outfit', sans-serif",
+            fontFamily: fonts.display,
             fontSize: "clamp(1rem, 3vw, 1.25rem)",
             color: colors.textMuted,
             textAlign: "center",
@@ -166,7 +164,7 @@ export default function LandingPage() {
             gap: "0.625rem",
             padding: "1rem 2.25rem",
             fontSize: "1.0625rem",
-            fontFamily: "'Outfit', sans-serif",
+            fontFamily: fonts.display,
             fontWeight: 700,
             color: colors.bgDeep,
             backgroundColor: colors.accent,
@@ -242,7 +240,7 @@ export default function LandingPage() {
               </div>
               <h3
                 style={{
-                  fontFamily: "'Outfit', sans-serif",
+                  fontFamily: fonts.display,
                   fontSize: "1rem",
                   fontWeight: 700,
                   color: colors.textPrimary,

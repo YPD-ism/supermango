@@ -7,12 +7,17 @@ export const colors = {
   textMutedLight: "rgba(226, 232, 240, 0.35)",
   textMuted: "#94a3b8",
   accent: "#facc15",
+  accentHover: "rgba(250, 204, 21, 0.04)",
+  accentGlow: "rgba(250, 204, 21, 0.06)",
   accentLight: "rgba(250, 204, 21, 0.08)",
+  accentGlowMd: "rgba(250, 204, 21, 0.15)",
   accentBorder: "rgba(250, 204, 21, 0.2)",
+  accentShadow: "rgba(250, 204, 21, 0.3)",
   border: "#1e293b",
   borderSubtle: "#334155",
 } as const;
 
 export const fonts = {
-  mono: "'SF Mono', 'Fira Code', 'JetBrains Mono', monospace",
+  mono: "'Space Mono', 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace",
+  display: "var(--font-outfit), 'Outfit', sans-serif",
 } as const;
