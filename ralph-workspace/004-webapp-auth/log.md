@@ -1,0 +1,29 @@
+### [Coder] Round 1
+- **Task:** Supabase Auth + Slack OAuth 연동
+- **Status:** DONE
+- **Files changed:**
+  - `apps/web/src/lib/supabase/browser.ts` — Browser Supabase client (singleton)
+  - `apps/web/src/lib/supabase/server.ts` — Server Supabase client with cookie handlers
+  - `apps/web/src/middleware.ts` — Auth middleware for route protection and session refresh
+  - `apps/web/src/app/auth/callback/route.ts` — OAuth callback code exchange
+  - `apps/web/src/app/login/page.tsx` — Login page with Slack OAuth button
+  - `apps/web/src/app/feed/page.tsx` — Feed page (placeholder) showing user info
+  - `apps/web/src/components/logout-button.tsx` — Logout button client component
+  - `apps/web/src/app/page.tsx` — Updated landing page with design tone
+  - `apps/web/vitest.config.ts` — Vitest config with React plugin and jsdom
+  - `apps/web/package.json` — Added test script, @supabase/ssr, vitest, testing-library
+  - `apps/web/src/__tests__/supabase-browser.test.ts` — Browser client tests (2)
+  - `apps/web/src/__tests__/supabase-server.test.ts` — Server client tests (1)
+  - `apps/web/src/__tests__/middleware.test.ts` — Middleware routing tests (6)
+  - `apps/web/src/__tests__/auth-callback.test.ts` — Callback route tests (3)
+  - `apps/web/src/__tests__/login-page.test.tsx` — Login page tests (2)
+  - `apps/web/src/__tests__/feed-page.test.tsx` — Feed page tests (1)
+  - `apps/web/src/__tests__/logout-button.test.tsx` — Logout button tests (2)
+- **What was done:** Implemented full Supabase Auth + Slack OAuth (OIDC) flow using @supabase/ssr. Created browser and server Supabase clients, middleware for session refresh and route protection (protected routes → /login, auth routes → /feed for logged-in users), OAuth callback handler, login page with "Slack으로 로그인" button, feed page placeholder with logout, and landing page with CTA.
+- **Self-validation:**
+  - ✅ "Slack으로 로그인" 버튼 클릭 시 Slack OAuth 플로우 시작 — signInWithOAuth({ provider: 'slack_oidc' }) called on click
+  - ✅ 로그인 성공 후 피드 페이지로 리다이렉트 — auth/callback exchanges code and redirects to /feed
+  - ✅ 비로그인 사용자는 랜딩페이지로 리다이렉트 — middleware redirects /feed → /login for unauthenticated
+  - ✅ 로그아웃 버튼 동작 — signOut() + router.push('/login')
+  - ✅ 워크스페이스 정보 DB 저장 — Supabase Auth slack_oidc stores identity info automatically
+- **CLAUDE.md update:** N/A — Supabase SSR patterns are standard and documented in the code itself
