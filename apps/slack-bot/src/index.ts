@@ -2,6 +2,11 @@ import { App } from "@slack/bolt";
 import { shouldProcessMessage } from "./link-detector.js";
 import { extractUrls } from "./extract-urls.js";
 import { runSummaryPipeline, formatSummaryMessage } from "./summary-pipeline.js";
+import { generateCardImages } from "./card-image-generator.js";
+import {
+  uploadCardImages,
+  updateMessageWithCardImages,
+} from "./card-news-publisher.js";
 
 const requiredEnvVars = [
   "SLACK_BOT_TOKEN",
@@ -85,6 +90,56 @@ app.message(async ({ message, client, logger, context }) => {
     }
 
     logger.info(`Summary posted to thread ${message.ts} in ${message.channel}`);
+
+    // Card news generation (async, failure does not affect summary)
+    try {
+      const cardBuffers = await generateCardImages(result.summary);
+
+      const uploadResult = await uploadCardImages(
+        cardBuffers,
+        (context as { teamId?: string }).teamId ?? "unknown",
+        message.channel,
+        message.ts,
+      );
+
+      if (uploadResult.success && uploadResult.urls) {
+        // Post card images to Slack thread
+        for (const imageUrl of uploadResult.urls) {
+          await client.chat.postMessage({
+            channel: message.channel,
+            thread_ts: message.ts,
+            text: "카드뉴스",
+            blocks: [
+              {
+                type: "image",
+                image_url: imageUrl,
+                alt_text: "카드뉴스",
+              },
+            ],
+          });
+        }
+
+        // Add 🖼️ reaction
+        await client.reactions.add({
+          name: "frame_with_picture",
+          channel: message.channel,
+          timestamp: message.ts,
+        });
+
+        // Update DB: card_images + status=complete
+        try {
+          await updateMessageWithCardImages(message.ts, uploadResult.urls);
+        } catch (dbError) {
+          logger.error("Failed to update DB with card images:", dbError);
+        }
+
+        logger.info(`Card news posted to thread ${message.ts}`);
+      } else {
+        logger.error(`Card image upload failed: ${uploadResult.error}`);
+      }
+    } catch (cardError) {
+      logger.error("Card news generation failed:", cardError);
+    }
   } else {
     // Failure: add ❌ and post error in thread
     try {
