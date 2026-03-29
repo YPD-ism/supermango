@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { colors, fonts } from "@/lib/theme";
 
 interface FeedMessage {
@@ -74,17 +75,16 @@ export default function FeedCard({ message }: { message: FeedMessage }) {
           }}
         >
           {message.card_images.map((src, i) => (
-            <img
-              key={i}
-              src={src}
-              alt={`카드뉴스 ${i + 1}/${totalSlides}`}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                flexShrink: 0,
-              }}
-            />
+            <div key={i} style={{ position: "relative", width: "100%", height: "100%", flexShrink: 0 }}>
+              <Image
+                src={src}
+                alt={`카드뉴스 ${i + 1}/${totalSlides}`}
+                fill
+                sizes="480px"
+                style={{ objectFit: "cover" }}
+                unoptimized
+              />
+            </div>
           ))}
         </div>
 
