@@ -115,13 +115,13 @@ describe("Slack Bot E2E", () => {
       // Check that at least some replies have image blocks
       const imageReplies = allReplies.filter((r) =>
         Array.isArray(r.blocks) &&
-        r.blocks.some(
-          (b: { type?: string }) => b.type === "image",
+        (r.blocks as Array<Record<string, unknown>>).some(
+          (b) => b.type === "image",
         ),
       );
       expect(imageReplies.length).toBeGreaterThanOrEqual(3);
     },
-    { timeout: 180_000 },
+    180_000,
   );
 
   it(
@@ -169,6 +169,6 @@ describe("Slack Bot E2E", () => {
       const errorText = replies[0].text ?? "";
       expect(errorText).toContain("❌");
     },
-    { timeout: 120_000 },
+    120_000,
   );
 });
