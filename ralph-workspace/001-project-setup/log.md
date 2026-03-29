@@ -1,0 +1,26 @@
+### [Coder] Round 1
+- **Task:** Turborepo 모노레포 초기화
+- **Status:** DONE
+- **Files changed:**
+  - `pnpm-workspace.yaml` (created)
+  - `turbo.json` (created)
+  - `apps/web/package.json` (created)
+  - `apps/web/tsconfig.json` (created)
+  - `apps/web/next.config.ts` (created)
+  - `apps/web/src/app/layout.tsx` (created)
+  - `apps/web/src/app/page.tsx` (created)
+  - `apps/slack-bot/package.json` (created)
+  - `apps/slack-bot/tsconfig.json` (created)
+  - `apps/slack-bot/src/index.ts` (created)
+  - `packages/shared/package.json` (created)
+  - `packages/shared/tsconfig.json` (created)
+  - `packages/shared/src/index.ts` (created)
+  - `package.json` (updated — turbo scripts and devDependency)
+  - `.gitignore` (updated — turbo, dist, monorepo paths)
+- **What was done:** Set up Turborepo monorepo with pnpm workspaces. Created apps/web (Next.js 15 App Router), apps/slack-bot (Bolt for JS with Socket Mode), and packages/shared (@linkdigest/shared). Root turbo.json defines dev, build, lint, typecheck, test tasks. Slack bot validates env vars before Bolt initialization to give clear error messages.
+- **Self-validation:**
+  - `pnpm install` — PASS (all 4 workspace projects resolved)
+  - `pnpm dev --filter web` — PASS (Next.js starts on localhost:3000)
+  - `pnpm dev --filter slack-bot` — PASS (runs, exits cleanly with missing env var message)
+  - `pnpm typecheck --filter slack-bot` — PASS
+- **CLAUDE.md update:** N/A — will add project-specific patterns after more tasks establish conventions
