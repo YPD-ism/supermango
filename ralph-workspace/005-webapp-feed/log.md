@@ -1,0 +1,12 @@
+### [Coder] Round 1
+- **Task:** 피드 API 및 데이터 조회
+- **Status:** DONE
+- **Files changed:**
+  - `apps/web/src/app/api/feed/route.ts` (created)
+  - `apps/web/src/__tests__/feed-api.test.ts` (created)
+- **What was done:** Implemented GET /api/feed route with cursor-based pagination. Queries messages with status=complete, joins user/channel/urls/tags relations via Supabase select. Auth enforced via getUser() check. Supports `cursor` and `limit` query params (limit capped at 50). Returns `{ data, nextCursor }` — nextCursor is null when no more pages.
+- **Self-validation:**
+  - ✅ 사용자의 워크스페이스에 속한 완료된 메시지를 최신순으로 반환 — RLS + status=complete + order by created_at DESC
+  - ✅ 커서 기반 페이지네이션이 동작 — cursor param with lt(created_at), nextCursor in response
+  - ✅ 메시지와 함께 공유자, 채널, 태그, 이미지 URL 정보를 포함 — select joins user, channel, urls, tags; message row includes card_images and summary
+- **CLAUDE.md update:** N/A — no new gotchas or patterns discovered; feed API follows existing route patterns
