@@ -17,6 +17,7 @@
     "satori": "^0.26.0"
   },
   "devDependencies": {
+    "@slack/web-api": "^7.15.0",
     "@types/node": "^22.15.3",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3",
