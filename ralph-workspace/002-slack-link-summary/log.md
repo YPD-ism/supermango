@@ -106,3 +106,17 @@
   - ✅ 5개 초과 URL 시 안내 메시지 포함 — skippedUrlCount tracked, formatSummaryMessage appends "요약되지 않은 링크 N개" notice
   - ✅ 결과가 Supabase DB에 저장된다 — saveSummaryResult upserts workspace/channel/user, inserts message/urls/tags with service role key
 - **CLAUDE.md update:** N/A — Supabase typed client with `as never` casts is a workaround for supabase-js v2.100 type resolution issues, but not a reusable pattern worth documenting
+
+### [Reviewer] Round 5
+- **Task:** 요약 파이프라인 통합 및 스레드 응답
+- **Status:** ISSUES
+- **Tests:** PASS — 74 tests passing (30 shared + 44 slack-bot including 12 summary-pipeline tests)
+- **Lint/Typecheck/Build:** PASS — tsc, eslint, next build all clean with zero warnings
+- **QA — Live server:** N/A — backend Slack bot pipeline with no UI. Acceptance criteria verified via unit tests covering all specified scenarios (full pipeline success, content extraction failure, summarizer failure, >5 URL skip count, DB save failure resilience, message formatting) and code inspection of index.ts message handler (reaction flow, thread replies, error handling).
+- **Code quality (simplify):** ISSUES —
+  1. **Silent catch block** (`summary-pipeline.ts:66-67`): DB save errors are caught and silently swallowed with an empty catch block and a comment "Log but don't fail." However, there is no actual logging — the error is discarded entirely. This makes DB persistence failures invisible. Fix: add `console.error("Failed to save summary to DB:", error)` or accept a logger parameter.
+  2. **Duplicate `MAX_URLS` constant** (`summary-pipeline.ts:5` and `jina-reader.ts:1`): Both files define `MAX_URLS = 5` independently. If one changes, the other won't, causing silent drift (e.g., jina-reader processes 5 but pipeline calculates skip count based on a different number). Fix: export `MAX_URLS` from `jina-reader.ts` and import it in `summary-pipeline.ts`.
+- **Security (manual):** PASS — URLs are proxied through Jina Reader (no direct SSRF), Supabase queries use parameterized client (no SQL injection), no hardcoded secrets, error messages posted to Slack are our own Korean strings (not raw DB/API errors), service role key used correctly server-side only.
+- **Design (gstack):** N/A — no UI component
+- **Spec alignment:** PASS — pipeline matches architecture (Jina → Gemini → DB), reaction flow (👀→✅/❌) matches spec, thread reply format matches spec, 5-URL cap with notice matches spec, DB schema matches data model, message status "summarized" is correct (will become "complete" after card news in story 003).
+- **CLAUDE.md update:** N/A — no new patterns or gotchas discovered
