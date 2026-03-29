@@ -120,3 +120,20 @@
 - **Design (gstack):** N/A — no UI component
 - **Spec alignment:** PASS — pipeline matches architecture (Jina → Gemini → DB), reaction flow (👀→✅/❌) matches spec, thread reply format matches spec, 5-URL cap with notice matches spec, DB schema matches data model, message status "summarized" is correct (will become "complete" after card news in story 003).
 - **CLAUDE.md update:** N/A — no new patterns or gotchas discovered
+
+### [Coder] Round 6
+- **Task:** 요약 파이프라인 통합 및 스레드 응답
+- **Status:** DONE
+- **Files changed:**
+  - `apps/slack-bot/src/jina-reader.ts` — exported MAX_URLS constant
+  - `apps/slack-bot/src/summary-pipeline.ts` — imported MAX_URLS from jina-reader, added console.error for DB save failures
+  - `apps/slack-bot/src/__tests__/summary-pipeline.test.ts` — added MAX_URLS to jina-reader mock
+- **What was done:** Fixed two reviewer issues: (1) Deduplicated MAX_URLS by exporting from jina-reader.ts and importing in summary-pipeline.ts, preventing silent drift. (2) Added console.error logging in the DB save catch block so persistence failures are visible instead of silently swallowed. Updated test mock to include the new MAX_URLS export.
+- **Self-validation:**
+  - ✅ 전체 파이프라인이 순차적으로 동작한다 — all 44 tests passing
+  - ✅ 스레드에 불릿 3줄 요약이 게시된다 — unchanged, formatSummaryMessage tested
+  - ✅ 요약 완료 시 👀 제거, ✅ 추가 — unchanged, reaction flow in index.ts
+  - ✅ 실패 시 ❌ 리액션 + 실패 사유 스레드 안내 — unchanged
+  - ✅ 5개 초과 URL 시 안내 메시지 포함 — now uses shared MAX_URLS constant
+  - ✅ 결과가 Supabase DB에 저장된다 — unchanged, DB errors now properly logged
+- **CLAUDE.md update:** N/A — fixes were straightforward, no new gotchas
