@@ -15,3 +15,9 @@
   - ✅ 감지 시 원본 메시지에 👀 리액션을 추가한다 — client.reactions.add({ name: "eyes" }) in handler
   - ✅ DM 메시지는 무시한다 — shouldProcessMessage rejects "im" and "mpim" channel types, tested
 - **CLAUDE.md update:** Added slack-bot test command
+
+### [Reviewer] Round 1
+- **Task:** Slack Bot 기본 설정 및 링크 감지
+- **Status:** PASS
+- **CLAUDE.md update:** N/A — no new patterns or gotchas discovered
+- **Task DONE**
