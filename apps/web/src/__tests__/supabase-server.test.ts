@@ -20,8 +20,8 @@ describe("createSupabaseServerClient", () => {
   });
 
   it("creates a server client with cookie handlers", async () => {
-    vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://test.supabase.co");
-    vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "test-anon-key");
+    vi.stubEnv("SUPABASE_URL", "https://test.supabase.co");
+    vi.stubEnv("SUPABASE_ANON_KEY", "test-anon-key");
 
     const { createServerClient } = await import("@supabase/ssr");
     const { createSupabaseServerClient } = await import(
