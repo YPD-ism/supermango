@@ -26,7 +26,7 @@
       "title": "카드뉴스 이미지 생성",
       "status": "in_progress",
       "tasks": [
-        { "id": 1, "name": "카드뉴스 이미지 생성 서비스", "status": "coder_done" },
+        { "id": 1, "name": "카드뉴스 이미지 생성 서비스", "status": "reviewer_pass" },
         { "id": 2, "name": "카드뉴스 업로드 및 Slack 게시", "status": "pending" }
       ]
     },
