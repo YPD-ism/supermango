@@ -15,17 +15,13 @@ readChain.single = mockSingle;
 
 const mockFrom = vi.fn().mockReturnValue(readChain);
 
-// Service role chain for updates (update → eq → select → single)
+// Service role chain for updates (update → eq)
 const mockServiceUpdate = vi.fn();
 const mockServiceEq = vi.fn();
-const mockServiceSelect = vi.fn();
-const mockServiceSingle = vi.fn();
 
 const serviceChain: Record<string, ReturnType<typeof vi.fn>> = {};
 serviceChain.update = mockServiceUpdate.mockReturnValue(serviceChain);
-serviceChain.eq = mockServiceEq.mockReturnValue(serviceChain);
-serviceChain.select = mockServiceSelect.mockReturnValue(serviceChain);
-serviceChain.single = mockServiceSingle;
+serviceChain.eq = mockServiceEq;
 
 const mockServiceFrom = vi.fn().mockReturnValue(serviceChain);
 
@@ -67,8 +63,6 @@ describe("POST /api/share", () => {
     mockSelect.mockReturnValue(readChain);
     mockEq.mockReturnValue(readChain);
     mockServiceUpdate.mockReturnValue(serviceChain);
-    mockServiceEq.mockReturnValue(serviceChain);
-    mockServiceSelect.mockReturnValue(serviceChain);
     mockGetUser.mockResolvedValue({
       data: { user: { id: "auth-user-1" } },
       error: null,
@@ -108,7 +102,7 @@ describe("POST /api/share", () => {
 
   it("returns existing share_token if message already has one", async () => {
     mockSingle.mockResolvedValue({
-      data: { id: "msg-1", share_token: "existing-token", status: "complete" },
+      data: { id: "msg-1", share_token: "existing-token" },
       error: null,
     });
 
@@ -125,21 +119,18 @@ describe("POST /api/share", () => {
 
   it("generates and saves new share_token when message has none", async () => {
     mockSingle.mockResolvedValue({
-      data: { id: "msg-1", share_token: null, status: "complete" },
+      data: { id: "msg-1", share_token: null },
       error: null,
     });
-    mockServiceSingle.mockResolvedValue({
-      data: { id: "msg-1", share_token: "new-generated-token" },
-      error: null,
-    });
+    mockServiceEq.mockResolvedValue({ error: null });
 
     const { POST } = await import("@/app/api/share/route");
     const response = await POST(makeShareRequest({ messageId: "msg-1" }));
 
     expect(response.status).toBe(200);
     const body = await response.json();
-    expect(body.shareToken).toBe("new-generated-token");
-    expect(body.shareUrl).toContain("new-generated-token");
+    expect(body.shareToken).toBeDefined();
+    expect(body.shareUrl).toContain(body.shareToken);
     // Should update via service role client
     expect(mockServiceFrom).toHaveBeenCalledWith("messages");
     expect(mockServiceUpdate).toHaveBeenCalledWith(
@@ -150,7 +141,7 @@ describe("POST /api/share", () => {
 
   it("queries messages table with message ID", async () => {
     mockSingle.mockResolvedValue({
-      data: { id: "msg-1", share_token: "tok", status: "complete" },
+      data: { id: "msg-1", share_token: "tok" },
       error: null,
     });
 
@@ -158,17 +149,16 @@ describe("POST /api/share", () => {
     await POST(makeShareRequest({ messageId: "msg-1" }));
 
     expect(mockFrom).toHaveBeenCalledWith("messages");
-    expect(mockSelect).toHaveBeenCalledWith("id, share_token, status");
+    expect(mockSelect).toHaveBeenCalledWith("id, share_token");
     expect(mockEq).toHaveBeenCalledWith("id", "msg-1");
   });
 
   it("returns 500 when database update fails", async () => {
     mockSingle.mockResolvedValue({
-      data: { id: "msg-1", share_token: null, status: "complete" },
+      data: { id: "msg-1", share_token: null },
       error: null,
     });
-    mockServiceSingle.mockResolvedValue({
-      data: null,
+    mockServiceEq.mockResolvedValue({
       error: { message: "Update failed" },
     });
 
