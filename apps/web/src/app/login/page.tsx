@@ -1,21 +1,9 @@
 "use client";
 
-import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
+import { handleSlackLogin } from "@/lib/auth";
 import { colors } from "@/lib/theme";
 
 export default function LoginPage() {
-  const handleLogin = async () => {
-    const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "slack_oidc",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-    if (error) {
-      console.error("OAuth login failed:", error.message);
-    }
-  };
 
   return (
     <div
@@ -47,7 +35,7 @@ export default function LoginPage() {
         Slack 링크 자동 요약 &amp; 카드뉴스
       </p>
       <button
-        onClick={handleLogin}
+        onClick={handleSlackLogin}
         style={{
           display: "flex",
           alignItems: "center",

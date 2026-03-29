@@ -1,12 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 
-const mockSignInWithOAuth = vi.fn().mockResolvedValue({ error: null });
+const mockHandleSlackLogin = vi.fn();
 
-vi.mock("@/lib/supabase/browser", () => ({
-  createSupabaseBrowserClient: vi.fn(() => ({
-    auth: { signInWithOAuth: mockSignInWithOAuth },
-  })),
+vi.mock("@/lib/auth", () => ({
+  handleSlackLogin: (...args: unknown[]) => mockHandleSlackLogin(...args),
 }));
 
 import LoginPage from "@/app/login/page";
@@ -14,7 +12,7 @@ import LoginPage from "@/app/login/page";
 describe("LoginPage", () => {
   beforeEach(() => {
     cleanup();
-    mockSignInWithOAuth.mockClear();
+    mockHandleSlackLogin.mockClear();
   });
 
   it("renders the Slack login button", () => {
@@ -25,17 +23,12 @@ describe("LoginPage", () => {
     ).toBeDefined();
   });
 
-  it("calls signInWithOAuth with slack_oidc on click", () => {
+  it("calls handleSlackLogin on click", () => {
     render(<LoginPage />);
 
     const button = screen.getByRole("button", { name: /slack.*로그인/i });
     fireEvent.click(button);
 
-    expect(mockSignInWithOAuth).toHaveBeenCalledWith({
-      provider: "slack_oidc",
-      options: {
-        redirectTo: expect.stringContaining("/auth/callback"),
-      },
-    });
+    expect(mockHandleSlackLogin).toHaveBeenCalled();
   });
 });

@@ -1,21 +1,9 @@
 "use client";
 
-import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
+import { handleSlackLogin } from "@/lib/auth";
 import { colors, fonts } from "@/lib/theme";
 
 export default function LandingPage() {
-  const handleLogin = async () => {
-    const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "slack_oidc",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-    if (error) {
-      console.error("OAuth login failed:", error.message);
-    }
-  };
 
   return (
     <main
@@ -171,7 +159,7 @@ export default function LandingPage() {
         {/* CTA Button */}
         <button
           className="landing-cta"
-          onClick={handleLogin}
+          onClick={handleSlackLogin}
           style={{
             display: "flex",
             alignItems: "center",
