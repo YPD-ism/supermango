@@ -1,6 +1,4 @@
-import {
-  createSupabaseClient,
-} from "@linkdigest/shared";
+import { getServiceRoleClient } from "./supabase-client.js";
 
 export interface SaveSummaryInput {
   teamId: string;
@@ -12,21 +10,12 @@ export interface SaveSummaryInput {
   tags: string[];
 }
 
-function getClient() {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url) throw new Error("SUPABASE_URL environment variable is not set");
-  if (!key)
-    throw new Error("SUPABASE_SERVICE_ROLE_KEY environment variable is not set");
-  return createSupabaseClient(url, key, { isServiceRole: true });
-}
-
 /**
  * Upsert workspace, channel, user records and save message + urls + tags.
  * Uses service role key to bypass RLS.
  */
 export async function saveSummaryResult(input: SaveSummaryInput): Promise<void> {
-  const supabase = getClient();
+  const supabase = getServiceRoleClient();
 
   // 1. Upsert workspace
   const { data: workspace, error: wsError } = await supabase

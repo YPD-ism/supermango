@@ -1,18 +1,9 @@
-import { createSupabaseClient } from "@linkdigest/shared";
+import { getServiceRoleClient } from "./supabase-client.js";
 
 export interface UploadResult {
   success: boolean;
   urls?: string[];
   error?: string;
-}
-
-function getClient() {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url) throw new Error("SUPABASE_URL environment variable is not set");
-  if (!key)
-    throw new Error("SUPABASE_SERVICE_ROLE_KEY environment variable is not set");
-  return createSupabaseClient(url, key, { isServiceRole: true });
 }
 
 /**
@@ -24,26 +15,33 @@ export async function uploadCardImages(
   channelId: string,
   messageTs: string,
 ): Promise<UploadResult> {
-  const supabase = getClient();
+  const supabase = getServiceRoleClient();
   const bucket = supabase.storage.from("card-images");
-  const urls: string[] = [];
 
-  for (let i = 0; i < buffers.length; i++) {
-    const filePath = `${teamId}/${channelId}/${messageTs}/card-${i + 1}.png`;
+  const results = await Promise.all(
+    buffers.map(async (buf, i) => {
+      const filePath = `${teamId}/${channelId}/${messageTs}/card-${i + 1}.png`;
 
-    const { error } = await bucket.upload(filePath, buffers[i], {
-      contentType: "image/png",
-      upsert: true,
-    });
+      const { error } = await bucket.upload(filePath, buf, {
+        contentType: "image/png",
+        upsert: true,
+      });
 
-    if (error) {
-      return { success: false, error: error.message };
-    }
+      if (error) {
+        return { error: error.message };
+      }
 
-    const { data } = bucket.getPublicUrl(filePath);
-    urls.push(data.publicUrl);
+      const { data } = bucket.getPublicUrl(filePath);
+      return { url: data.publicUrl };
+    }),
+  );
+
+  const firstError = results.find((r) => "error" in r && r.error);
+  if (firstError && "error" in firstError) {
+    return { success: false, error: firstError.error };
   }
 
+  const urls = results.map((r) => ("url" in r ? r.url! : ""));
   return { success: true, urls };
 }
 
@@ -54,32 +52,17 @@ export async function updateMessageWithCardImages(
   slackMessageTs: string,
   imageUrls: string[],
 ): Promise<void> {
-  const supabase = getClient();
+  const supabase = getServiceRoleClient();
 
-  const { data: messages, error: selectError } = await supabase
-    .from("messages")
-    .select("id")
-    .eq("slack_message_ts", slackMessageTs);
-
-  if (selectError) {
-    throw new Error(`Failed to find message: ${selectError.message}`);
-  }
-
-  if (!messages || messages.length === 0) {
-    throw new Error(`Message not found for ts: ${slackMessageTs}`);
-  }
-
-  const messageId = (messages[0] as { id: string }).id;
-
-  const { error: updateError } = await supabase
+  const { error } = await supabase
     .from("messages")
     .update({
       card_images: imageUrls,
       status: "complete",
     } as never)
-    .eq("id", messageId);
+    .eq("slack_message_ts", slackMessageTs);
 
-  if (updateError) {
-    throw new Error(updateError.message);
+  if (error) {
+    throw new Error(error.message);
   }
 }
