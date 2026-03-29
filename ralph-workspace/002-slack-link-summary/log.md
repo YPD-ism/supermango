@@ -47,3 +47,17 @@
 - **Design (gstack):** N/A — no UI component
 - **Spec alignment:** PASS — matches architecture decisions (Jina Reader for URL→markdown), 5-URL cap aligns with non-goal of >6 URLs, concurrent fetching appropriate for data flow, failure info structured for downstream pipeline.
 - **CLAUDE.md update:** N/A — no new patterns or gotchas discovered
+
+### [Coder] Round 3
+- **Task:** Jina Reader 콘텐츠 추출
+- **Status:** DONE
+- **Files changed:**
+  - `apps/slack-bot/src/jina-reader.ts` — validate JINA_API_KEY early, pass as parameter to fetchSingleUrl
+  - `apps/slack-bot/src/__tests__/jina-reader.test.ts` — added test for missing JINA_API_KEY
+- **What was done:** Fixed reviewer issue: moved `process.env.JINA_API_KEY` read from `fetchSingleUrl` (called per-URL) to `fetchContent` (called once). Added early throw if the key is missing or empty, preventing silent `"Bearer undefined"` auth failures. Passed the validated key as a parameter to `fetchSingleUrl`.
+- **Self-validation:**
+  - ✅ URL을 Jina Reader API로 보내 마크다운 콘텐츠를 받아온다 — existing tests still pass (9 original + 1 new = 10 tests)
+  - ✅ 최대 5개 URL만 처리한다 — unchanged, tested
+  - ✅ 타임아웃, 404, 페이월 등 실패 케이스를 처리한다 — unchanged, tested
+  - ✅ JINA_API_KEY 미설정 시 명확한 에러 발생 — new test confirms throw with "JINA_API_KEY" message
+- **CLAUDE.md update:** N/A — fix was straightforward, no new gotchas
