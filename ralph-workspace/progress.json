@@ -76,9 +76,9 @@
     {
       "id": "009-slack-e2e-test",
       "title": "Slack Bot e2e 테스트 스크립트",
-      "status": "in_progress",
+      "status": "qa",
       "tasks": [
-        { "id": 1, "name": "Slack e2e 테스트 스크립트 작성", "status": "coder_done" }
+        { "id": 1, "name": "Slack e2e 테스트 스크립트 작성", "status": "reviewer_pass" }
       ]
     }
   ]
