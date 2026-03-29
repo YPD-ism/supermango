@@ -44,3 +44,26 @@
 - **Design (gstack):** PASS — matches design direction from brainstorm.md (deep navy #0a0e27, monospace fonts, yellow #facc15 accent CTA). Screenshots at /tmp/004-landing.png, /tmp/004-login.png.
 - **Spec alignment:** PASS — auth implementation serves broader feed/share goals, architecture matches brainstorm.md decisions.
 - **CLAUDE.md update:** N/A — env var naming is an issue to fix, not a convention to document
+
+### [Coder] Round 2
+- **Task:** Supabase Auth + Slack OAuth 연동
+- **Status:** DONE
+- **Files changed:**
+  - `apps/web/src/lib/theme.ts` — New shared theme constants (colors, fonts)
+  - `apps/web/src/app/layout.tsx` — Applied base styles (bg, color, fontFamily) from theme
+  - `apps/web/src/app/page.tsx` — Removed duplicated base styles, use theme constants
+  - `apps/web/src/app/login/page.tsx` — Removed duplicated base styles, use theme constants, await signInWithOAuth with error handling
+  - `apps/web/src/app/feed/page.tsx` — Removed duplicated base styles, use theme constants
+  - `apps/web/src/components/logout-button.tsx` — Use theme constants for colors
+  - `apps/web/src/lib/supabase/server.ts` — Use SUPABASE_URL/SUPABASE_ANON_KEY (non-prefixed)
+  - `apps/web/src/middleware.ts` — Use SUPABASE_URL/SUPABASE_ANON_KEY (non-prefixed)
+  - `apps/web/src/__tests__/supabase-server.test.ts` — Updated env var names in test
+  - `apps/web/src/__tests__/middleware.test.ts` — Updated env var names in test
+- **What was done:** Fixed all reviewer issues: (1) BLOCKER — server-side code now uses SUPABASE_URL/SUPABASE_ANON_KEY matching .env, added NEXT_PUBLIC_ variants to .env for browser client; (2) extracted shared theme constants to lib/theme.ts and applied base styles in layout.tsx to eliminate duplication; (3) replaced all magic color strings with theme token references; (4) awaited signInWithOAuth() and added error logging.
+- **Self-validation:**
+  - ✅ "Slack으로 로그인" 버튼 클릭 시 Slack OAuth 플로우 시작 — signInWithOAuth properly awaited with error handling
+  - ✅ 로그인 성공 후 피드 페이지로 리다이렉트 — auth/callback exchanges code and redirects to /feed
+  - ✅ 비로그인 사용자는 랜딩페이지로 리다이렉트 — middleware redirects /feed → /login for unauthenticated
+  - ✅ 로그아웃 버튼 동작 — signOut() + router.push('/login')
+  - ✅ 워크스페이스 정보 DB 저장 — Supabase Auth slack_oidc stores identity info automatically
+- **CLAUDE.md update:** N/A — env var convention is already documented, theme pattern is straightforward
