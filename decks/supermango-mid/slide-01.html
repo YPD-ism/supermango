@@ -6,15 +6,14 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
   :root {
-    --bg: #06091a;
-    --surface: rgba(255,255,255,0.03);
-    --border: rgba(255,255,255,0.06);
-    --text: #e2e8f0;
-    --text-dim: #64748b;
-    --text-muted: #475569;
-    --gold: #facc15;
-    --gold-dim: rgba(250,204,21,0.12);
-    --gold-glow: rgba(250,204,21,0.25);
+    --bg: #0A0A0A;
+    --surface: rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.08);
+    --text: #FFFFFF;
+    --text-secondary: #A1A1AA;
+    --text-muted: #71717A;
+    --gold: #FACC15;
+    --gold-glow: rgba(250,204,21,0.12);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -25,36 +24,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
     overflow: hidden;
+    position: relative;
   }
-  /* noise texture */
-  .noise {
-    position: absolute; inset: 0; z-index: 0;
-    opacity: 0.35;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
-    background-size: 128px 128px;
-    pointer-events: none;
-  }
-  /* radial glow behind logo */
-  .glow-orb {
+  /* subtle radial glow */
+  .glow {
     position: absolute;
-    width: 320pt; height: 320pt;
+    width: 400pt; height: 400pt;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    background: radial-gradient(circle, rgba(250,204,21,0.07) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--gold-glow) 0%, transparent 60%);
     pointer-events: none;
-  }
-  /* grid */
-  .bg-grid {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-    background-size: 36pt 36pt;
-    pointer-events: none;
-    mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 30%, transparent 80%);
-    -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 30%, transparent 80%);
   }
   .content {
     position: relative; z-index: 2;
@@ -62,82 +42,75 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 14pt;
+    gap: 20pt;
   }
   .emoji-logo {
-    font-size: 48pt;
-    filter: drop-shadow(0 0 20pt rgba(250,204,21,0.3));
+    font-size: 52pt;
+    filter: drop-shadow(0 0 24pt rgba(250,204,21,0.25));
   }
   h1 {
-    font-size: 56pt;
+    font-size: 60pt;
     font-weight: 900;
-    letter-spacing: -2pt;
-    background: linear-gradient(160deg, #fde68a 0%, #facc15 40%, #f59e0b 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    line-height: 1.1;
-    filter: drop-shadow(0 0 30pt rgba(250,204,21,0.15));
+    letter-spacing: -2.5pt;
+    color: var(--gold);
+    line-height: 1.05;
   }
   .subtitle {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12pt;
+    font-size: 16pt;
     font-weight: 600;
-    color: var(--text-dim);
-    letter-spacing: 3pt;
-    text-transform: uppercase;
+    color: var(--text-secondary);
+    letter-spacing: 0.5pt;
   }
   .divider {
-    width: 40pt; height: 2pt;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    width: 48pt; height: 2pt;
+    background: var(--gold);
+    opacity: 0.3;
     border-radius: 1pt;
-    margin: 4pt 0;
   }
   .team-info {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10pt;
+    gap: 12pt;
   }
   .team-name {
-    font-size: 13pt;
+    font-size: 14pt;
     font-weight: 700;
     color: var(--text);
     letter-spacing: 2pt;
   }
   .members {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10pt;
+    font-size: 12pt;
     color: var(--text-muted);
     display: flex;
-    gap: 24pt;
+    gap: 28pt;
   }
   .members span {
     display: flex;
     align-items: center;
-    gap: 6pt;
+    gap: 8pt;
   }
   .members span::before {
-    content: '';
-    width: 4pt; height: 4pt;
-    border-radius: 50%;
-    background: var(--gold);
-    opacity: 0.5;
+    content: '+';
+    color: var(--gold);
+    font-weight: 700;
+    opacity: 0.6;
   }
   .github {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9pt;
+    font-size: 11pt;
     color: var(--text-muted);
-    padding: 5pt 14pt;
+    padding: 6pt 16pt;
     border: 1px solid var(--border);
     border-radius: 20pt;
     background: var(--surface);
   }
-  /* slide indicator */
   .slide-num {
     position: absolute;
     top: 20pt; right: 28pt;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9pt;
+    font-size: 10pt;
     color: var(--text-muted);
     letter-spacing: 1pt;
   }
@@ -145,7 +118,7 @@
     position: absolute;
     bottom: 20pt; left: 28pt;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 8pt;
+    font-size: 10pt;
     color: var(--text-muted);
     letter-spacing: 2pt;
     text-transform: uppercase;
@@ -153,14 +126,12 @@
 </style>
 </head>
 <body>
-  <div class="noise"></div>
-  <div class="glow-orb"></div>
-  <div class="bg-grid"></div>
+  <div class="glow"></div>
   <div class="slide-num">01 / 05</div>
   <div class="content">
     <div class="emoji-logo">🥭</div>
     <h1>Supermango</h1>
-    <div class="subtitle">Slack 링크 자동 요약 &amp; 카드뉴스</div>
+    <div class="subtitle">Slack 링크 자동 요약 & 카드뉴스</div>
     <div class="divider"></div>
     <div class="team-info">
       <div class="team-name">Team Supermango</div>

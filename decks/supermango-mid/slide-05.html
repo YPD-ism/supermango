@@ -6,16 +6,15 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
   :root {
-    --bg: #06091a;
-    --surface: rgba(255,255,255,0.03);
-    --border: rgba(255,255,255,0.06);
-    --text: #e2e8f0;
-    --text-dim: #64748b;
-    --text-muted: #475569;
-    --gold: #facc15;
-    --gold-dim: rgba(250,204,21,0.08);
-    --green: #22c55e;
-    --green-glow: rgba(34,197,94,0.12);
+    --bg: #0A0A0A;
+    --surface: rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.08);
+    --text: #FFFFFF;
+    --text-secondary: #A1A1AA;
+    --text-muted: #71717A;
+    --gold: #FACC15;
+    --gold-glow: rgba(250,204,21,0.12);
+    --green: #22C55E;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -23,71 +22,40 @@
     font-family: 'Pretendard', -apple-system, sans-serif;
     background: var(--bg);
     color: var(--text);
-    padding: 28pt 36pt;
+    padding: 32pt 40pt;
     display: flex;
     flex-direction: column;
-    gap: 12pt;
+    gap: 14pt;
     overflow: hidden;
     position: relative;
-  }
-  .noise {
-    position: absolute; inset: 0; z-index: 0;
-    opacity: 0.35;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
-    background-size: 128px 128px;
-    pointer-events: none;
-  }
-  .bg-grid {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-    background-size: 36pt 36pt;
-    pointer-events: none;
-    mask-image: linear-gradient(to bottom, black 20%, transparent 85%);
-    -webkit-mask-image: linear-gradient(to bottom, black 20%, transparent 85%);
-  }
-  /* celebratory glow */
-  .glow-accent {
-    position: absolute;
-    top: -40pt; left: -40pt;
-    width: 200pt; height: 200pt;
-    background: radial-gradient(circle, var(--green-glow) 0%, transparent 70%);
-    pointer-events: none;
   }
   .slide-num {
     position: absolute;
     top: 20pt; right: 28pt;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9pt;
+    font-size: 10pt;
     color: var(--text-muted);
     letter-spacing: 1pt;
     z-index: 3;
   }
   .header-row {
-    position: relative; z-index: 2;
     display: flex;
     align-items: baseline;
     justify-content: space-between;
   }
   .header-row h2 {
-    font-size: 32pt;
+    font-size: 36pt;
     font-weight: 900;
-    background: linear-gradient(135deg, #fde68a, var(--gold));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 20pt rgba(250,204,21,0.12));
+    color: var(--gold);
   }
   .header-row .stat {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 14pt;
+    font-size: 16pt;
     font-weight: 700;
     color: var(--green);
-    letter-spacing: 0.5pt;
   }
   /* progress bar */
   .progress-bar-container {
-    position: relative; z-index: 2;
     width: 100%; height: 6pt;
     background: rgba(255,255,255,0.04);
     border-radius: 3pt;
@@ -95,82 +63,67 @@
   }
   .progress-bar {
     width: 100%; height: 100%;
-    background: linear-gradient(90deg, var(--green) 0%, var(--gold) 100%);
+    background: linear-gradient(90deg, var(--green), var(--gold));
     border-radius: 3pt;
-    box-shadow: 0 0 12pt rgba(34,197,94,0.3);
   }
   /* stories grid */
   .stories-grid {
-    position: relative; z-index: 2;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 7pt;
+    gap: 8pt;
     flex: 1;
   }
   .story-item {
     display: flex;
     align-items: center;
-    gap: 8pt;
-    padding: 8pt 12pt;
+    gap: 10pt;
+    padding: 10pt 14pt;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 8pt;
-    transition: border-color 0.3s;
-  }
-  .story-item:hover {
-    border-color: rgba(34,197,94,0.15);
   }
   .story-item .check {
-    font-size: 11pt;
+    font-size: 12pt;
     flex-shrink: 0;
-    filter: saturate(0.8);
   }
   .story-item .story-title {
-    font-size: 10pt;
+    font-size: 12pt;
     color: var(--text);
     flex: 1;
     font-weight: 500;
   }
   .story-item .tasks-count {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 8pt;
+    font-size: 10pt;
     font-weight: 600;
     color: var(--text-muted);
     flex-shrink: 0;
     background: rgba(255,255,255,0.04);
-    padding: 2pt 6pt;
+    padding: 3pt 8pt;
     border-radius: 10pt;
   }
   /* bottom */
   .bottom-section {
-    position: relative; z-index: 2;
     text-align: center;
-    padding-top: 10pt;
+    padding-top: 12pt;
     border-top: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    gap: 6pt;
+    gap: 8pt;
   }
   .bottom-message {
-    font-size: 20pt;
+    font-size: 22pt;
     font-weight: 900;
-    background: linear-gradient(135deg, #fde68a, var(--gold));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 16pt rgba(250,204,21,0.15));
+    color: var(--gold);
   }
   .bottom-sub {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9pt;
+    font-size: 11pt;
     color: var(--text-muted);
-    letter-spacing: 0.5pt;
   }
 </style>
 </head>
 <body>
-  <div class="noise"></div>
-  <div class="glow-accent"></div>
-  <div class="bg-grid"></div>
   <div class="slide-num">05 / 05</div>
   <div class="header-row">
     <h2>현재 진행 상황</h2>
