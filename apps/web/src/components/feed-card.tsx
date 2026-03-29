@@ -45,8 +45,32 @@ function formatDate(dateStr: string): string {
 
 export default function FeedCard({ message }: { message: FeedMessage }) {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [shareState, setShareState] = useState<"idle" | "loading" | "success" | "error">("idle");
   const summaryLines = message.summary.split("\n").filter(Boolean);
   const totalSlides = message.card_images.length;
+
+  const handleShare = async () => {
+    setShareState("loading");
+    try {
+      const res = await fetch("/api/share", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messageId: message.id }),
+      });
+      if (!res.ok) {
+        setShareState("error");
+        setTimeout(() => setShareState("idle"), 2000);
+        return;
+      }
+      const { shareUrl } = await res.json();
+      await navigator.clipboard.writeText(shareUrl);
+      setShareState("success");
+      setTimeout(() => setShareState("idle"), 2000);
+    } catch {
+      setShareState("error");
+      setTimeout(() => setShareState("idle"), 2000);
+    }
+  };
 
   const goNext = () => setCurrentSlide((i) => Math.min(i + 1, totalSlides - 1));
   const goPrev = () => setCurrentSlide((i) => Math.max(i - 1, 0));
@@ -260,19 +284,22 @@ export default function FeedCard({ message }: { message: FeedMessage }) {
           </div>
           <button
             aria-label="공유"
+            onClick={handleShare}
+            disabled={shareState === "loading"}
             style={{
               fontSize: "0.75rem",
               fontWeight: 600,
-              color: colors.textMuted,
+              color: shareState === "success" ? colors.accent : shareState === "error" ? "#f87171" : colors.textMuted,
               backgroundColor: "transparent",
-              border: `1px solid ${colors.borderSubtle}`,
+              border: `1px solid ${shareState === "success" ? colors.accentBorder : shareState === "error" ? "rgba(248,113,113,0.3)" : colors.borderSubtle}`,
               borderRadius: "0.25rem",
               padding: "0.25rem 0.625rem",
-              cursor: "pointer",
+              cursor: shareState === "loading" ? "wait" : "pointer",
               fontFamily: fonts.mono,
+              opacity: shareState === "loading" ? 0.6 : 1,
             }}
           >
-            공유
+            {shareState === "loading" ? "공유..." : shareState === "success" ? "링크 복사 완료!" : shareState === "error" ? "공유 실패" : "공유"}
           </button>
         </div>
       </div>

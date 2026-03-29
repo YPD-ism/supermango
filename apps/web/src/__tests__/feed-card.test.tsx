@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent, cleanup } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { render, screen, fireEvent, cleanup, waitFor, act } from "@testing-library/react";
 
 vi.mock("next/image", () => ({
   /* eslint-disable @typescript-eslint/no-unused-vars, @next/next/no-img-element, jsx-a11y/alt-text */
@@ -109,5 +109,97 @@ describe("FeedCard", () => {
   it("renders channel name", () => {
     render(<FeedCard message={mockMessage} />);
     expect(screen.getByText(/#general/)).toBeDefined();
+  });
+
+  describe("share button", () => {
+    let fetchSpy: ReturnType<typeof vi.fn>;
+
+    beforeEach(() => {
+      fetchSpy = vi.fn();
+      global.fetch = fetchSpy;
+      Object.assign(navigator, {
+        clipboard: { writeText: vi.fn().mockResolvedValue(undefined) },
+      });
+    });
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    it("calls share API and copies URL to clipboard on click", async () => {
+      fetchSpy.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ shareToken: "tok-123", shareUrl: "http://localhost/share/tok-123" }),
+      });
+
+      render(<FeedCard message={mockMessage} />);
+      const shareBtn = screen.getByRole("button", { name: /공유/i });
+
+      await act(async () => {
+        fireEvent.click(shareBtn);
+      });
+
+      await waitFor(() => {
+        expect(fetchSpy).toHaveBeenCalledWith("/api/share", expect.objectContaining({
+          method: "POST",
+          body: JSON.stringify({ messageId: "msg-1" }),
+        }));
+      });
+
+      expect(navigator.clipboard.writeText).toHaveBeenCalledWith("http://localhost/share/tok-123");
+    });
+
+    it("shows success toast after copying share URL", async () => {
+      fetchSpy.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ shareToken: "tok-123", shareUrl: "http://localhost/share/tok-123" }),
+      });
+
+      render(<FeedCard message={mockMessage} />);
+      await act(async () => {
+        fireEvent.click(screen.getByRole("button", { name: /공유/i }));
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText(/복사/)).toBeDefined();
+      });
+    });
+
+    it("shows error toast when share API fails", async () => {
+      fetchSpy.mockResolvedValueOnce({
+        ok: false,
+        json: async () => ({ error: "Failed" }),
+      });
+
+      render(<FeedCard message={mockMessage} />);
+      await act(async () => {
+        fireEvent.click(screen.getByRole("button", { name: /공유/i }));
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText(/실패/)).toBeDefined();
+      });
+    });
+
+    it("disables share button while loading", async () => {
+      let resolveRequest: (v: unknown) => void;
+      fetchSpy.mockReturnValueOnce(new Promise(r => { resolveRequest = r; }));
+
+      render(<FeedCard message={mockMessage} />);
+      const shareBtn = screen.getByRole("button", { name: /공유/i });
+
+      await act(async () => {
+        fireEvent.click(shareBtn);
+      });
+
+      expect(shareBtn).toHaveProperty("disabled", true);
+
+      await act(async () => {
+        resolveRequest!({
+          ok: true,
+          json: async () => ({ shareToken: "tok", shareUrl: "http://localhost/share/tok" }),
+        });
+      });
+    });
   });
 });
