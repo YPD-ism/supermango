@@ -32,4 +32,5 @@ Ralph loop engine with planner, coder, and reviewer for autonomous feature imple
 - **Dev:** `pnpm dev` runs all apps, `pnpm dev --filter web` / `pnpm dev --filter slack-bot` for individual
 - **Slack bot:** exits cleanly with env var message if `SLACK_BOT_TOKEN`, `SLACK_SIGNING_SECRET`, `SLACK_APP_TOKEN` are missing
 - **DB Migrations:** SQL files in `supabase/migrations/` — run on hosted Supabase (no local CLI)
-- **Tests:** `packages/shared` uses vitest (`pnpm test --filter @linkdigest/shared`), `pnpm test` runs all
+- **Tests:** `packages/shared` and `apps/slack-bot` use vitest (`pnpm test --filter @linkdigest/shared`, `pnpm test --filter slack-bot`), `pnpm test` runs all
+- **Slack bot architecture:** `extract-urls.ts` parses Slack-formatted URLs (`<url>`, `<url|label>`) and plain URLs; `link-detector.ts` has `shouldProcessMessage` filter; `index.ts` wires Bolt message listener
