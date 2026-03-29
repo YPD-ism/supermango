@@ -37,7 +37,7 @@ export default function LandingPage() {
           50% { opacity: 0.06; }
         }
         .landing-cta:hover {
-          background-color: #fde047 !important;
+          background-color: ${colors.accentHoverBg} !important;
           transform: translateY(-2px);
         }
         .feature-card:hover {

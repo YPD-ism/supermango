@@ -7,6 +7,7 @@ export const colors = {
   textMutedLight: "rgba(226, 232, 240, 0.35)",
   textMuted: "#94a3b8",
   accent: "#facc15",
+  accentHoverBg: "#fde047",
   accentHover: "rgba(250, 204, 21, 0.04)",
   accentGlow: "rgba(250, 204, 21, 0.06)",
   accentLight: "rgba(250, 204, 21, 0.08)",
