@@ -139,3 +139,21 @@
 - **Spec alignment:** PASS — shared package matches brainstorm.md architecture exactly. Database types align with SQL schema from Task 2. Both apps ready to consume shared client and types.
 - **CLAUDE.md update:** N/A — conventions already established
 - **Task DONE**
+
+### [QA] Round 1
+- **Story:** 001-project-setup
+- **Status:** PASS
+- **Tests:** PASS — 30 tests across 4 test files (supabase-client: 5, types: 11, migration: 11, exports: 3)
+- **Lint/Typecheck/Build:** PASS — `pnpm lint`, `pnpm typecheck` (all 3 packages), `pnpm build` all clean
+- **QA — Live server:**
+  1. `pnpm install` — all workspace projects resolve successfully
+  2. `pnpm dev` — runs both web (Next.js on :3000) and slack-bot in parallel
+  3. `pnpm dev --filter web` — Next.js starts, returns HTTP 200
+  4. `pnpm dev --filter slack-bot` — runs, exits cleanly with env var validation message
+  5. Shared package importable from both apps via `workspace:*` dependency — typecheck confirms import chain
+- **Cross-task integration:** All 3 tasks work together. Types in `packages/shared/src/types.ts` match SQL schema in `supabase/migrations/00001_initial_schema.sql` exactly (6 tables, same columns, MessageStatus matches check constraint). Both apps declare `@linkdigest/shared` dependency and typecheck passes.
+- **Code quality (simplify):** PASS — clean, minimal code appropriate for setup. Minor note: `vitest` in root `package.json` devDependencies is redundant (already in `packages/shared`), not blocking.
+- **Security:** PASS — no secrets committed, `.env` in `.gitignore`, env var validation before Bolt init, RLS enabled on all tables with workspace-scoped authenticated access and share_token-based anon access.
+- **Design:** N/A — infrastructure task, no UI
+- **Spec alignment:** PASS — monorepo structure matches spec exactly (`apps/web`, `apps/slack-bot`, `packages/shared`), all acceptance criteria from story.md verified independently
+- **Story DONE**
