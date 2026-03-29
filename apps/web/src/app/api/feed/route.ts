@@ -31,19 +31,19 @@ export async function GET(request: Request) {
   const channelJoin = workspaceId ? "channel!inner:channel_id" : "channel:channel_id";
   const tagsJoin = tag ? "tags!inner" : "tags";
 
+  const selectQuery = [
+    "*",
+    "user:user_id(id, display_name, avatar_url)",
+    `${channelJoin}(id, name, workspace_id)`,
+    "urls(id, url, title, position)",
+    `${tagsJoin}(id, name)`,
+  ].join(", ");
+
   let query = supabase
     .from("messages")
-    .select(
-      `
-      *,
-      user:user_id(id, display_name, avatar_url),
-      ${channelJoin}(id, name, workspace_id),
-      urls(id, url, title, position),
-      ${tagsJoin}(id, name)
-    `
-    )
+    .select(selectQuery)
     .eq("status", "complete")
-    .order("created_at", { ascending: false })
+    .order("created_at", { ascending: false });
 
   if (workspaceId) {
     query = query.eq("channel.workspace_id", workspaceId);
@@ -70,9 +70,10 @@ export async function GET(request: Request) {
     );
   }
 
-  const hasMore = data.length > pageSize;
-  const items = hasMore ? data.slice(0, pageSize) : data;
-  const nextCursor = hasMore ? items[items.length - 1].created_at : null;
+  const items = data as unknown as Array<{ created_at: string; [key: string]: unknown }>;
+  const hasMore = items.length > pageSize;
+  const trimmed = hasMore ? items.slice(0, pageSize) : items;
+  const nextCursor = hasMore ? trimmed[trimmed.length - 1].created_at : null;
 
-  return NextResponse.json({ data: items, nextCursor });
+  return NextResponse.json({ data: trimmed, nextCursor });
 }
