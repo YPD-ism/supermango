@@ -61,3 +61,9 @@
   - ✅ 타임아웃, 404, 페이월 등 실패 케이스를 처리한다 — unchanged, tested
   - ✅ JINA_API_KEY 미설정 시 명확한 에러 발생 — new test confirms throw with "JINA_API_KEY" message
 - **CLAUDE.md update:** N/A — fix was straightforward, no new gotchas
+
+### [Reviewer] Round 3
+- **Task:** Jina Reader 콘텐츠 추출
+- **Status:** PASS
+- **CLAUDE.md update:** N/A — no new patterns or gotchas discovered
+- **Task DONE**
