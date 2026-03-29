@@ -1,10 +1,7 @@
 import satori from "satori";
 import { Resvg } from "@resvg/resvg-js";
 import { readFile } from "node:fs/promises";
-import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import { join } from "node:path";
 
 const CARD_WIDTH = 1080;
 const CARD_HEIGHT = 1080;
@@ -13,7 +10,12 @@ let fontDataCache: ArrayBuffer | null = null;
 
 async function loadFont(): Promise<ArrayBuffer> {
   if (fontDataCache) return fontDataCache;
-  const fontPath = join(__dirname, "assets", "NotoSansKR-Bold.ttf");
+  // In dev (tsx), __dirname is available. In built output, resolve from cwd.
+  const base =
+    typeof __dirname !== "undefined"
+      ? __dirname
+      : join(process.cwd(), "src");
+  const fontPath = join(base, "assets", "NotoSansKR-Bold.ttf");
   const buffer = await readFile(fontPath);
   fontDataCache = buffer.buffer.slice(
     buffer.byteOffset,
@@ -125,7 +127,7 @@ async function renderCard(
   const fontData = await loadFont();
   const markup = buildCardMarkup(line, cardNumber);
 
-  const svg = await satori(markup as React.ReactNode, {
+  const svg = await satori(markup as unknown as React.ReactNode, {
     width: CARD_WIDTH,
     height: CARD_HEIGHT,
     fonts: [
