@@ -17,7 +17,7 @@
       "tasks": [
         { "id": 1, "name": "Slack Bot 기본 설정 및 링크 감지", "status": "reviewer_pass" },
         { "id": 2, "name": "Jina Reader 콘텐츠 추출", "status": "reviewer_pass" },
-        { "id": 3, "name": "Gemini 요약 및 태그 생성", "status": "pending" },
+        { "id": 3, "name": "Gemini 요약 및 태그 생성", "status": "coder_done" },
         { "id": 4, "name": "요약 파이프라인 통합 및 스레드 응답", "status": "pending" }
       ]
     },

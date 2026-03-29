@@ -67,3 +67,18 @@
 - **Status:** PASS
 - **CLAUDE.md update:** N/A — no new patterns or gotchas discovered
 - **Task DONE**
+
+### [Coder] Round 4
+- **Task:** Gemini 요약 및 태그 생성
+- **Status:** DONE
+- **Files changed:**
+  - `apps/slack-bot/src/gemini-summarizer.ts` — Gemini summarizer service (summarizeContent, buildPrompt, ContentInput/SummaryResult types)
+  - `apps/slack-bot/src/__tests__/gemini-summarizer.test.ts` — 7 tests for summarization
+  - `apps/slack-bot/package.json` — added @google/generative-ai dependency
+- **What was done:** Implemented `summarizeContent()` that takes an array of `ContentInput` (url + content), builds a Korean prompt requesting 3-bullet summary and tags, sends to Gemini 2.0 Flash with `responseMimeType: "application/json"` for structured output. Parses JSON response into `SummaryResult` with summary array and tags array. Handles API errors, malformed JSON responses, missing GEMINI_API_KEY, and empty input gracefully.
+- **Self-validation:**
+  - ✅ 마크다운 콘텐츠를 입력받아 불릿 3줄 요약을 생성한다 — summarizeContent accepts ContentInput[], prompt requests exactly 3 bullet summary, test verifies summary.length === 3
+  - ✅ 내용에 맞는 태그를 자동 생성한다 — prompt requests 1-5 keyword tags, test verifies tags array returned
+  - ✅ 여러 URL의 콘텐츠를 합산하여 하나의 요약으로 만든다 — buildPrompt concatenates all URL contents, single generateContent call, test verifies all URLs in prompt
+  - ✅ API 실패 시 에러를 반환한다 — catches API errors → {success: false, error}, also handles malformed JSON and missing API key
+- **CLAUDE.md update:** N/A — Gemini API usage follows standard @google/generative-ai patterns, no non-obvious gotchas
