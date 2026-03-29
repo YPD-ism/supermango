@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { colors } from "@/lib/theme";
 
 export default function Home() {
   return (
@@ -9,10 +10,6 @@ export default function Home() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#0a0e27",
-        color: "#e2e8f0",
-        fontFamily:
-          "'SF Mono', 'Fira Code', 'JetBrains Mono', monospace",
       }}
     >
       <h1
@@ -28,7 +25,7 @@ export default function Home() {
       <p
         style={{
           fontSize: "1.125rem",
-          color: "#94a3b8",
+          color: colors.textMuted,
           marginBottom: "3rem",
         }}
       >
@@ -40,8 +37,8 @@ export default function Home() {
           padding: "0.875rem 2rem",
           fontSize: "1rem",
           fontWeight: 700,
-          color: "#0a0e27",
-          backgroundColor: "#facc15",
+          color: colors.bgDeep,
+          backgroundColor: colors.accent,
           borderRadius: "0.5rem",
           textDecoration: "none",
         }}

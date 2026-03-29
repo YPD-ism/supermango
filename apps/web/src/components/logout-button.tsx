@@ -1,6 +1,7 @@
 "use client";
 
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
+import { colors } from "@/lib/theme";
 import { useRouter } from "next/navigation";
 
 export default function LogoutButton() {
@@ -19,7 +20,7 @@ export default function LogoutButton() {
         padding: "0.5rem 1rem",
         fontSize: "0.875rem",
         fontWeight: 600,
-        color: "#94a3b8",
+        color: colors.textMuted,
         backgroundColor: "transparent",
         border: "1px solid #334155",
         borderRadius: "0.375rem",
