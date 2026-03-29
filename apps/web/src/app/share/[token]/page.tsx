@@ -1,3 +1,4 @@
+import { cache } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { createSupabaseServiceClient } from "@/lib/supabase/service";
@@ -8,7 +9,7 @@ type Props = {
   params: Promise<{ token: string }>;
 };
 
-async function getSharedMessage(token: string) {
+const getSharedMessage = cache(async function getSharedMessage(token: string) {
   const supabase = createSupabaseServiceClient();
   const { data, error } = await supabase
     .from("messages")
@@ -18,7 +19,7 @@ async function getSharedMessage(token: string) {
 
   if (error || !data) return null;
   return data;
-}
+});
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { token } = await params;

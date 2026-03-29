@@ -55,7 +55,7 @@ export default function FeedCard({ message }: { message: FeedMessage }) {
     <article
       data-testid="feed-card"
       style={{
-        backgroundColor: "#0f1535",
+        backgroundColor: colors.bgCard,
         border: `1px solid ${colors.border}`,
         borderRadius: "0.75rem",
         overflow: "hidden",
@@ -65,7 +65,7 @@ export default function FeedCard({ message }: { message: FeedMessage }) {
       }}
     >
       {/* Carousel */}
-      <div style={{ position: "relative", aspectRatio: "4 / 3", overflow: "hidden", backgroundColor: "#060a1f" }}>
+      <div style={{ position: "relative", aspectRatio: "4 / 3", overflow: "hidden", backgroundColor: colors.bgCarousel }}>
         <div
           style={{
             display: "flex",
@@ -102,7 +102,7 @@ export default function FeedCard({ message }: { message: FeedMessage }) {
             height: "2rem",
             borderRadius: "50%",
             border: "none",
-            backgroundColor: "rgba(10, 14, 39, 0.7)",
+            backgroundColor: colors.bgOverlay,
             color: colors.textPrimary,
             fontSize: "0.875rem",
             cursor: "pointer",
@@ -127,7 +127,7 @@ export default function FeedCard({ message }: { message: FeedMessage }) {
             height: "2rem",
             borderRadius: "50%",
             border: "none",
-            backgroundColor: "rgba(10, 14, 39, 0.7)",
+            backgroundColor: colors.bgOverlay,
             color: colors.textPrimary,
             fontSize: "0.875rem",
             cursor: "pointer",
@@ -159,7 +159,7 @@ export default function FeedCard({ message }: { message: FeedMessage }) {
                 width: "0.5rem",
                 height: "0.5rem",
                 borderRadius: "50%",
-                backgroundColor: i === currentSlide ? colors.accent : "rgba(226, 232, 240, 0.35)",
+                backgroundColor: i === currentSlide ? colors.accent : colors.textMutedLight,
                 transition: "background-color 0.2s",
               }}
             />
@@ -246,8 +246,8 @@ export default function FeedCard({ message }: { message: FeedMessage }) {
                   fontSize: "0.6875rem",
                   fontWeight: 600,
                   color: colors.accent,
-                  backgroundColor: "rgba(250, 204, 21, 0.08)",
-                  border: `1px solid rgba(250, 204, 21, 0.2)`,
+                  backgroundColor: colors.accentLight,
+                  border: `1px solid ${colors.accentBorder}`,
                   borderRadius: "0.25rem",
                   padding: "0.125rem 0.5rem",
                   letterSpacing: "0.02em",
