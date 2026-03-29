@@ -101,3 +101,25 @@
 - **Spec alignment:** PASS — data model matches brainstorm.md exactly (workspace→channel→message with urls/summary/card_images/tags/status/share_token→user). Indexes cover feed queries, tag filtering, and share lookups. Status check constraint matches the pipeline flow.
 - **CLAUDE.md update:** N/A — conventions already added by coder
 - **Task DONE**
+
+### [Coder] Round 4
+- **Task:** Shared 패키지 설정
+- **Status:** DONE
+- **Files changed:**
+  - `packages/shared/src/supabase.ts` (created — Supabase client factory + env helpers)
+  - `packages/shared/src/types.ts` (created — Database type, Row/Insert/Update for all 6 tables, convenience aliases)
+  - `packages/shared/src/index.ts` (updated — re-exports all client functions and types)
+  - `packages/shared/package.json` (updated — added @supabase/supabase-js dependency)
+  - `packages/shared/src/__tests__/supabase-client.test.ts` (created — 5 tests for client creation and env helpers)
+  - `packages/shared/src/__tests__/types.test.ts` (created — 11 type-level tests verifying DB schema types)
+  - `packages/shared/src/__tests__/exports.test.ts` (created — 3 tests verifying module exports)
+- **What was done:** Implemented `@linkdigest/shared` package with: (1) `createSupabaseClient()` typed factory accepting URL, key, and optional `isServiceRole` flag; (2) `getSupabaseUrl()` and `getSupabaseAnonKey()` env helpers with validation; (3) Full `Database` type matching all 6 SQL tables with Row/Insert/Update variants; (4) `MessageStatus` union type matching SQL check constraint; (5) Convenience row type aliases (Workspace, Channel, User, Message, Url, Tag).
+- **Self-validation:**
+  - `@linkdigest/shared`로 import 가능 — PASS (both apps have workspace:* dependency, `pnpm typecheck` passes all 3 packages)
+  - Supabase 클라이언트가 정상 초기화된다 — PASS (5 tests: basic client, service role client, env helpers, missing env throws)
+  - DB 테이블에 대응하는 TypeScript 타입이 정의된다 — PASS (11 type tests: 6 tables, Row/Insert/Update, MessageStatus, card_images array, field presence)
+  - `pnpm test` — PASS (30 tests across 4 test files)
+  - `pnpm lint` — PASS
+  - `pnpm typecheck` — PASS (all 3 packages)
+  - `pnpm build` — PASS
+- **CLAUDE.md update:** N/A — shared package patterns are straightforward and follow existing conventions
