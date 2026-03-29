@@ -68,9 +68,9 @@
     {
       "id": "008-webapp-landing",
       "title": "웹앱 랜딩페이지",
-      "status": "pending",
+      "status": "in_progress",
       "tasks": [
-        { "id": 1, "name": "랜딩페이지 구현", "status": "pending" }
+        { "id": 1, "name": "랜딩페이지 구현", "status": "coder_done" }
       ]
     },
     {

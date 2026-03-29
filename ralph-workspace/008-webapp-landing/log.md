@@ -1,0 +1,12 @@
+### [Coder] Round 1
+- **Task:** 랜딩페이지 구현
+- **Status:** DONE
+- **Files changed:** apps/web/src/app/page.tsx (rewritten), apps/web/src/__tests__/landing-page.test.tsx (new)
+- **What was done:** Rewrote the landing page from a minimal placeholder to a full-featured landing page with: terminal-style version tag with blinking cursor, bold Korean headline ("링크는 공유하고, 요약은 맡기세요"), service description subtext, "Slack으로 로그인" CTA button with Slack logo SVG and pulse glow animation, 3 feature cards (자동 감지, AI 요약, 카드뉴스) in responsive grid, grid background pattern and radial glow atmospheric effects, footer. Uses Outfit display font and Space Mono for terminal elements. All inline styles following project conventions with theme colors/fonts.
+- **Self-validation:**
+  - ✅ 서비스 이름, 핵심 가치 소개가 표시된다 — heading + subtext + 3 feature cards
+  - ✅ "Slack으로 로그인" 버튼이 눈에 띄게 배치된다 — prominent yellow CTA with Slack icon
+  - ✅ 클릭 시 Slack OAuth 플로우가 시작된다 — signInWithOAuth({ provider: "slack_oidc" }) verified by test
+  - ✅ 딥 네이비 다크 배경 + 노란색 액센트 CTA — colors.bgDeep + colors.accent
+  - ✅ 모바일/태블릿/데스크탑 반응형 — clamp() font sizes, auto-fit grid, mobile-first
+- **CLAUDE.md update:** N/A — no new patterns or gotchas discovered
