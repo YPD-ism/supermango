@@ -1,0 +1,13 @@
+### [Coder] Round 1
+- **Task:** 공유 링크 생성 API
+- **Status:** DONE
+- **Files changed:**
+  - `apps/web/src/app/api/share/route.ts` (new) — POST endpoint for share token generation
+  - `apps/web/src/lib/supabase/service.ts` (new) — Service role Supabase client for RLS-bypassing updates
+  - `apps/web/src/__tests__/share-api.test.ts` (new) — 8 tests covering auth, validation, token generation/reuse, error handling
+- **What was done:** Implemented `POST /api/share` API endpoint that accepts `{ messageId }` and returns `{ shareToken, shareUrl }`. Uses authenticated client for auth check and message lookup (RLS-filtered), then service role client for updating `share_token` on the message (since RLS only allows SELECT for authenticated users). Reuses existing token if present, generates UUID token if not.
+- **Self-validation:**
+  - ✅ 메시지 ID로 공유 URL을 요청하면 고유 share_token 기반 URL을 반환한다
+  - ✅ 이미 share_token이 있으면 재사용한다
+  - ✅ 인증된 사용자만 공유 링크를 생성할 수 있다
+- **CLAUDE.md update:** N/A — no new project-wide patterns discovered; service role client is self-contained in one file
