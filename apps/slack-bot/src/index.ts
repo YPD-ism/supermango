@@ -105,23 +105,17 @@ app.message(async ({ message, client, logger, context }) => {
       );
 
       if (uploadResult.success && uploadResult.urls) {
-        // Post card images to Slack thread (parallel)
-        await Promise.all(
-          uploadResult.urls.map((imageUrl) =>
-            client.chat.postMessage({
-              channel: message.channel,
-              thread_ts: message.ts,
-              text: "카드뉴스",
-              blocks: [
-                {
-                  type: "image",
-                  image_url: imageUrl,
-                  alt_text: "카드뉴스",
-                },
-              ],
-            }),
-          ),
-        );
+        // Post all card images in a single thread message
+        await client.chat.postMessage({
+          channel: message.channel,
+          thread_ts: message.ts,
+          text: "카드뉴스",
+          blocks: uploadResult.urls.map((imageUrl, i) => ({
+            type: "image" as const,
+            image_url: imageUrl,
+            alt_text: `카드뉴스 ${i + 1}/${uploadResult.urls!.length}`,
+          })),
+        });
 
         // Add 🖼️ reaction
         await client.reactions.add({
