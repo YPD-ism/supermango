@@ -1,9 +1,14 @@
-import { createSupabaseClient } from "@linkdigest/shared";
+import { createClient } from "@supabase/supabase-js";
 
 export function createSupabaseServiceClient() {
-  return createSupabaseClient(
+  return createClient(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { isServiceRole: true }
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    }
   );
 }

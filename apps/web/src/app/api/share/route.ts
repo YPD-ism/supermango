@@ -53,7 +53,7 @@ export async function POST(request: Request) {
 
   const { data: updated, error: updateError } = await serviceClient
     .from("messages")
-    .update({ share_token: newToken })
+    .update({ share_token: newToken } as Record<string, unknown>)
     .eq("id", messageId)
     .select("id, share_token")
     .single();
@@ -65,9 +65,10 @@ export async function POST(request: Request) {
     );
   }
 
-  const shareUrl = buildShareUrl(request, updated.share_token!);
+  const row = updated as { id: string; share_token: string };
+  const shareUrl = buildShareUrl(request, row.share_token);
   return NextResponse.json({
-    shareToken: updated.share_token,
+    shareToken: row.share_token,
     shareUrl,
   });
 }

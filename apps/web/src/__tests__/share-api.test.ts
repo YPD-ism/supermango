@@ -5,7 +5,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 const mockSelect = vi.fn();
 const mockEq = vi.fn();
 const mockSingle = vi.fn();
-const mockUpdate = vi.fn();
 const mockGetUser = vi.fn();
 
 // Chain for read queries (select → eq → single)
