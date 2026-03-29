@@ -9,6 +9,7 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
+    "test:e2e:slack": "pnpm --filter slack-bot test:e2e:slack",
     "loop": "bash ralph-engine/ralph-loop.sh",
     "loop:once": "bash ralph-engine/ralph-once.sh"
   },
