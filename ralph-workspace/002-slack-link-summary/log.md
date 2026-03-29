@@ -137,3 +137,9 @@
   - ✅ 5개 초과 URL 시 안내 메시지 포함 — now uses shared MAX_URLS constant
   - ✅ 결과가 Supabase DB에 저장된다 — unchanged, DB errors now properly logged
 - **CLAUDE.md update:** N/A — fixes were straightforward, no new gotchas
+
+### [Reviewer] Round 6
+- **Task:** 요약 파이프라인 통합 및 스레드 응답
+- **Status:** PASS
+- **CLAUDE.md update:** N/A — no new patterns or gotchas discovered
+- **Task DONE**
