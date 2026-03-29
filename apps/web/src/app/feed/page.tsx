@@ -1,5 +1,6 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import LogoutButton from "@/components/logout-button";
+import FeedList from "@/components/feed-list";
 import { colors } from "@/lib/theme";
 
 export default async function FeedPage() {
@@ -31,10 +32,8 @@ export default async function FeedPage() {
           <LogoutButton />
         </div>
       </header>
-      <main style={{ padding: "2rem 1.5rem", textAlign: "center" }}>
-        <p style={{ color: colors.textMuted }}>
-          아직 공유된 링크가 없어요. Slack 채널에 봇을 초대해보세요!
-        </p>
+      <main style={{ padding: "1.5rem", display: "flex", justifyContent: "center" }}>
+        <FeedList />
       </main>
     </div>
   );
