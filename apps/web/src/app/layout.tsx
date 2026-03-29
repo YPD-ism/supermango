@@ -16,7 +16,7 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "LinkDigest",
+  title: "Supermango",
   description: "Slack 링크 자동 요약 & 카드뉴스",
 };
 

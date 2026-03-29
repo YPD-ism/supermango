@@ -17,7 +17,7 @@ describe("LandingPage", () => {
 
   it("renders the service name", () => {
     render(<LandingPage />);
-    expect(screen.getByText(/LinkDigest/)).toBeDefined();
+    expect(screen.getByText(/Supermango/)).toBeDefined();
   });
 
   it("renders service introduction content", () => {

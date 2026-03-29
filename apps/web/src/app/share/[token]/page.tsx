@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!message) {
     return {
-      title: "LinkDigest",
+      title: "Supermango",
       description: "Slack 링크 자동 요약 & 카드뉴스",
     };
   }
@@ -36,9 +36,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const firstImage = message.card_images?.[0];
 
   return {
-    title: "LinkDigest — 공유된 요약",
+    title: "Supermango — 공유된 요약",
     openGraph: {
-      title: "LinkDigest — 공유된 요약",
+      title: "Supermango — 공유된 요약",
       description: summary,
       ...(firstImage && {
         images: [{ url: firstImage, width: 1200, height: 900 }],
@@ -106,7 +106,7 @@ export default async function SharePage({ params }: Props) {
             fontFamily: fonts.mono,
           }}
         >
-          LinkDigest 홈으로
+          Supermango 홈으로
         </Link>
       </div>
     );
@@ -122,7 +122,7 @@ export default async function SharePage({ params }: Props) {
         }}
       >
         <h1 style={{ fontSize: "1.25rem", fontWeight: 800, margin: 0 }}>
-          🔗 LinkDigest
+          🥭 Supermango
         </h1>
       </header>
 

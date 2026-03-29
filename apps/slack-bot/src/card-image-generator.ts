@@ -59,7 +59,7 @@ function buildCardMarkup(
               color: "#FFD60A",
               letterSpacing: "-0.5px",
             },
-            children: "LinkDigest",
+            children: "Supermango",
           },
         },
         // Card number badge (top-right)

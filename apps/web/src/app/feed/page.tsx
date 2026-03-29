@@ -21,7 +21,7 @@ export default async function FeedPage() {
         }}
       >
         <h1 style={{ fontSize: "1.25rem", fontWeight: 800 }}>
-          🔗 LinkDigest
+          🥭 Supermango
         </h1>
         <div
           style={{ display: "flex", alignItems: "center", gap: "1rem" }}

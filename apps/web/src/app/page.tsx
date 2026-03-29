@@ -105,7 +105,7 @@ export default function LandingPage() {
             animation: "fadeInUp 0.6s ease-out",
           }}
         >
-          <span style={{ opacity: 0.5 }}>$</span> linkdigest v1.0
+          <span style={{ opacity: 0.5 }}>$</span> supermango v1.0
           <span style={{ animation: "blink 1s step-end infinite", marginLeft: "2px" }}>▋</span>
         </div>
 
@@ -279,7 +279,7 @@ export default function LandingPage() {
           zIndex: 1,
         }}
       >
-        LinkDigest — Slack 링크 자동 요약 서비스
+        Supermango — Slack 링크 자동 요약 서비스
       </footer>
     </main>
   );
