@@ -34,3 +34,4 @@ Ralph loop engine with planner, coder, and reviewer for autonomous feature imple
 - **DB Migrations:** SQL files in `supabase/migrations/` — run on hosted Supabase (no local CLI)
 - **Tests:** `packages/shared` and `apps/slack-bot` use vitest (`pnpm test --filter @linkdigest/shared`, `pnpm test --filter slack-bot`), `pnpm test` runs all
 - **Slack bot architecture:** `extract-urls.ts` parses Slack-formatted URLs (`<url>`, `<url|label>`) and plain URLs; `link-detector.ts` has `shouldProcessMessage` filter; `index.ts` wires Bolt message listener
+- **Env vars:** Root `.env` holds all secrets. `apps/web` uses `dotenv-cli` to load `../../.env` in dev/build/start scripts — Next.js only loads `.env` from its own project dir, not monorepo root

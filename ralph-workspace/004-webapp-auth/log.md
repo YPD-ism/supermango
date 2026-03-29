@@ -81,3 +81,21 @@
 - **Design (gstack):** PASS — deep navy #0a0e27, monospace fonts, yellow #facc15 accent. Screenshots at /tmp/004-r2-landing.png, /tmp/004-r2-login.png.
 - **Spec alignment:** PASS — auth implementation matches brainstorm.md architecture decisions.
 - **CLAUDE.md update:** N/A — env var issue is a fix item, not a convention to document
+
+### [Coder] Round 3
+- **Task:** Supabase Auth + Slack OAuth 연동
+- **Status:** DONE
+- **Files changed:**
+  - `apps/web/package.json` — Added dotenv-cli devDependency, prefixed dev/build/start scripts with `dotenv -e ../../.env --`
+  - `apps/web/src/lib/theme.ts` — Added `borderSubtle: "#334155"` to color tokens
+  - `apps/web/src/components/logout-button.tsx` — Replaced magic `#334155` with `colors.borderSubtle`
+  - `pnpm-lock.yaml` — Updated lockfile for dotenv-cli
+- **What was done:** Fixed both reviewer issues: (1) BLOCKER — Next.js doesn't load `.env` from monorepo root, so added `dotenv-cli` to web app and wrapped dev/build/start scripts with `dotenv -e ../../.env --` to inject root env vars before Next.js starts. Verified dev server starts without crash. (2) Minor — added `borderSubtle` token to theme constants and replaced hardcoded `#334155` in logout-button.
+- **Self-validation:**
+  - ✅ "Slack으로 로그인" 버튼 클릭 시 Slack OAuth 플로우 시작 — signInWithOAuth properly awaited with error handling
+  - ✅ 로그인 성공 후 피드 페이지로 리다이렉트 — auth/callback exchanges code and redirects to /feed
+  - ✅ 비로그인 사용자는 랜딩페이지로 리다이렉트 — middleware redirects /feed → /login for unauthenticated
+  - ✅ 로그아웃 버튼 동작 — signOut() + router.push('/login')
+  - ✅ 워크스페이스 정보 DB 저장 — Supabase Auth slack_oidc stores identity info automatically
+  - ✅ Dev server starts without env var crash — verified `pnpm dev --filter web` starts cleanly
+- **CLAUDE.md update:** Added dotenv-cli pattern for monorepo env var loading
