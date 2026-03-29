@@ -1,4 +1,19 @@
 // @linkdigest/shared — Supabase client, types, and utilities
-// Will be populated in Task 2 (DB schema) and Task 3 (shared package setup)
 
-export {};
+export {
+  createSupabaseClient,
+  getSupabaseUrl,
+  getSupabaseAnonKey,
+  type TypedSupabaseClient,
+} from "./supabase.js";
+
+export type {
+  Database,
+  MessageStatus,
+  Workspace,
+  Channel,
+  User,
+  Message,
+  Url,
+  Tag,
+} from "./types.js";
