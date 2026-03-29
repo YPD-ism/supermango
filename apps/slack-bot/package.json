@@ -10,6 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@linkdigest/shared": "workspace:*",
     "@slack/bolt": "^4.3.0"
   },
