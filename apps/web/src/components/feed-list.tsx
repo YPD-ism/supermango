@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import FeedCard from "./feed-card";
+import FeedFilters, { type FilterState } from "./feed-filters";
 import { colors, fonts } from "@/lib/theme";
 
 interface FeedMessage {
@@ -82,9 +83,14 @@ export default function FeedList() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(false);
   const [initialized, setInitialized] = useState(false);
+  const [filters, setFilters] = useState<FilterState>({ workspace_id: "", channel_id: "", tag: "" });
   const sentinelRef = useRef<HTMLDivElement>(null);
 
-  const fetchFeed = useCallback(async (cursor?: string | null) => {
+  const filtersRef = useRef(filters);
+  filtersRef.current = filters;
+
+  const fetchFeed = useCallback(async (cursor?: string | null, overrideFilters?: FilterState) => {
+    const f = overrideFilters ?? filtersRef.current;
     const isInitial = !cursor;
     if (isInitial) {
       setLoading(true);
@@ -94,7 +100,13 @@ export default function FeedList() {
     }
 
     try {
-      const url = cursor ? `/api/feed?cursor=${encodeURIComponent(cursor)}` : "/api/feed";
+      const params = new URLSearchParams();
+      if (cursor) params.set("cursor", cursor);
+      if (f.workspace_id) params.set("workspace_id", f.workspace_id);
+      if (f.channel_id) params.set("channel_id", f.channel_id);
+      if (f.tag) params.set("tag", f.tag);
+      const qs = params.toString();
+      const url = qs ? `/api/feed?${qs}` : "/api/feed";
       const res = await fetch(url);
       if (!res.ok) throw new Error("fetch failed");
       const json = await res.json();
@@ -112,6 +124,11 @@ export default function FeedList() {
 
   useEffect(() => {
     fetchFeed();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleFilterChange = useCallback((newFilters: FilterState) => {
+    setFilters(newFilters);
+    fetchFeed(null, newFilters);
   }, [fetchFeed]);
 
   useEffect(() => {
@@ -128,9 +145,16 @@ export default function FeedList() {
     return () => observer.disconnect();
   }, [nextCursor, loadingMore, fetchFeed]);
 
+  const filtersBar = (
+    <div style={{ display: "flex", justifyContent: "center", marginBottom: "1rem" }}>
+      <FeedFilters onFilterChange={handleFilterChange} />
+    </div>
+  );
+
   if (loading && !initialized) {
     return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1.5rem" }}>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1.5rem", width: "100%" }}>
+        {filtersBar}
         <SkeletonCard />
         <SkeletonCard />
         <SkeletonCard />
@@ -140,64 +164,71 @@ export default function FeedList() {
 
   if (error) {
     return (
-      <div
-        style={{
-          textAlign: "center",
-          padding: "3rem 1rem",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "1rem",
-        }}
-      >
-        <p style={{ color: colors.textMuted, fontSize: "0.9375rem", fontFamily: fonts.mono }}>
-          피드를 불러올 수 없습니다
-        </p>
-        <button
-          aria-label="재시도"
-          onClick={() => fetchFeed()}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+        {filtersBar}
+        <div
           style={{
-            padding: "0.5rem 1.25rem",
-            fontSize: "0.8125rem",
-            fontWeight: 700,
-            color: colors.bgDeep,
-            backgroundColor: colors.accent,
-            border: "none",
-            borderRadius: "0.375rem",
-            cursor: "pointer",
-            fontFamily: fonts.mono,
+            textAlign: "center",
+            padding: "3rem 1rem",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "1rem",
           }}
         >
-          재시도
-        </button>
+          <p style={{ color: colors.textMuted, fontSize: "0.9375rem", fontFamily: fonts.mono }}>
+            피드를 불러올 수 없습니다
+          </p>
+          <button
+            aria-label="재시도"
+            onClick={() => fetchFeed()}
+            style={{
+              padding: "0.5rem 1.25rem",
+              fontSize: "0.8125rem",
+              fontWeight: 700,
+              color: colors.bgDeep,
+              backgroundColor: colors.accent,
+              border: "none",
+              borderRadius: "0.375rem",
+              cursor: "pointer",
+              fontFamily: fonts.mono,
+            }}
+          >
+            재시도
+          </button>
+        </div>
       </div>
     );
   }
 
   if (initialized && messages.length === 0) {
     return (
-      <div
-        style={{
-          textAlign: "center",
-          padding: "3rem 1rem",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "0.75rem",
-        }}
-      >
-        <p style={{ color: colors.textMuted, fontSize: "0.9375rem", fontFamily: fonts.mono }}>
-          아직 공유된 링크가 없어요.
-        </p>
-        <p style={{ color: colors.textMuted, fontSize: "0.8125rem", fontFamily: fonts.mono }}>
-          Slack 채널에 봇을 초대해보세요!
-        </p>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+        {filtersBar}
+        <div
+          style={{
+            textAlign: "center",
+            padding: "3rem 1rem",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "0.75rem",
+          }}
+        >
+          <p style={{ color: colors.textMuted, fontSize: "0.9375rem", fontFamily: fonts.mono }}>
+            아직 공유된 링크가 없어요.
+          </p>
+          <p style={{ color: colors.textMuted, fontSize: "0.8125rem", fontFamily: fonts.mono }}>
+            Slack 채널에 봇을 초대해보세요!
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1.5rem" }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1.5rem", width: "100%" }}>
+      {filtersBar}
       {messages.map((msg) => (
         <FeedCard key={msg.id} message={msg} />
       ))}

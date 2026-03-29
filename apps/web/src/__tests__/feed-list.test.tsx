@@ -35,6 +35,48 @@ class MockIntersectionObserver {
   }
 }
 
+// Helper: route-based fetch mock. Feed responses are queued; filter APIs return empty data.
+function setupFetchMock(feedResponses: Array<{ ok: boolean; data?: unknown[]; nextCursor?: string | null }>) {
+  const feedQueue = [...feedResponses];
+  const emptyOk = { ok: true, json: () => Promise.resolve({ data: [] }) };
+
+  (fetch as ReturnType<typeof vi.fn>).mockImplementation((url: string) => {
+    if (typeof url === "string" && url.includes("/api/feed")) {
+      const next = feedQueue.shift();
+      if (!next) return Promise.resolve(emptyOk);
+      if (!next.ok) return Promise.resolve({ ok: false, status: 500 });
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ data: next.data ?? [], nextCursor: next.nextCursor ?? null }),
+      });
+    }
+    // workspaces/channels API — return empty data
+    return Promise.resolve(emptyOk);
+  });
+}
+
+// Variant that hangs on the Nth feed call
+function setupFetchMockWithHang(feedResponses: Array<{ ok: boolean; data?: unknown[]; nextCursor?: string | null }>, hangOnIndex: number) {
+  const feedQueue = [...feedResponses];
+  let feedCallIndex = 0;
+  const emptyOk = { ok: true, json: () => Promise.resolve({ data: [] }) };
+
+  (fetch as ReturnType<typeof vi.fn>).mockImplementation((url: string) => {
+    if (typeof url === "string" && url.includes("/api/feed")) {
+      const idx = feedCallIndex++;
+      if (idx === hangOnIndex) return new Promise(() => {}); // hang
+      const next = feedQueue.shift();
+      if (!next) return Promise.resolve(emptyOk);
+      if (!next.ok) return Promise.resolve({ ok: false, status: 500 });
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ data: next.data ?? [], nextCursor: next.nextCursor ?? null }),
+      });
+    }
+    return Promise.resolve(emptyOk);
+  });
+}
+
 describe("FeedList", () => {
   beforeEach(() => {
     cleanup();
@@ -58,10 +100,7 @@ describe("FeedList", () => {
       makeFeedMessage("msg-1", "2026-03-28T10:00:00Z"),
       makeFeedMessage("msg-2", "2026-03-28T09:00:00Z"),
     ];
-    (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve({ data: messages, nextCursor: null }),
-    });
+    setupFetchMock([{ ok: true, data: messages, nextCursor: null }]);
 
     render(<FeedList />);
 
@@ -71,10 +110,7 @@ describe("FeedList", () => {
   });
 
   it("shows empty state when no data", async () => {
-    (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve({ data: [], nextCursor: null }),
-    });
+    setupFetchMock([{ ok: true, data: [], nextCursor: null }]);
 
     render(<FeedList />);
 
@@ -85,10 +121,7 @@ describe("FeedList", () => {
   });
 
   it("shows error state with retry button on fetch failure", async () => {
-    (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
-      ok: false,
-      status: 500,
-    });
+    setupFetchMock([{ ok: false }]);
 
     render(<FeedList />);
 
@@ -99,12 +132,10 @@ describe("FeedList", () => {
   });
 
   it("retries fetch when retry button is clicked", async () => {
-    (fetch as ReturnType<typeof vi.fn>)
-      .mockResolvedValueOnce({ ok: false, status: 500 })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({ data: [makeFeedMessage("msg-1", "2026-03-28T10:00:00Z")], nextCursor: null }),
-      });
+    setupFetchMock([
+      { ok: false },
+      { ok: true, data: [makeFeedMessage("msg-1", "2026-03-28T10:00:00Z")], nextCursor: null },
+    ]);
 
     render(<FeedList />);
 
@@ -123,15 +154,10 @@ describe("FeedList", () => {
     const page1 = [makeFeedMessage("msg-1", "2026-03-28T10:00:00Z")];
     const page2 = [makeFeedMessage("msg-2", "2026-03-28T09:00:00Z")];
 
-    (fetch as ReturnType<typeof vi.fn>)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({ data: page1, nextCursor: "2026-03-28T10:00:00Z" }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({ data: page2, nextCursor: null }),
-      });
+    setupFetchMock([
+      { ok: true, data: page1, nextCursor: "2026-03-28T10:00:00Z" },
+      { ok: true, data: page2, nextCursor: null },
+    ]);
 
     render(<FeedList />);
 
@@ -148,10 +174,7 @@ describe("FeedList", () => {
   });
 
   it("does not load more when there is no nextCursor", async () => {
-    (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve({ data: [makeFeedMessage("msg-1", "2026-03-28T10:00:00Z")], nextCursor: null }),
-    });
+    setupFetchMock([{ ok: true, data: [makeFeedMessage("msg-1", "2026-03-28T10:00:00Z")], nextCursor: null }]);
 
     render(<FeedList />);
 
@@ -161,19 +184,20 @@ describe("FeedList", () => {
 
     intersectionCallback([{ isIntersecting: true }]);
 
-    // fetch should only have been called once (initial load)
-    expect(fetch).toHaveBeenCalledTimes(1);
+    // feed fetch should only be called once; filter APIs also call fetch
+    const feedCalls = (fetch as ReturnType<typeof vi.fn>).mock.calls.filter(
+      (c: string[]) => typeof c[0] === "string" && c[0].includes("/api/feed")
+    );
+    expect(feedCalls).toHaveLength(1);
   });
 
   it("shows skeleton cards during next page load", async () => {
     const page1 = [makeFeedMessage("msg-1", "2026-03-28T10:00:00Z")];
 
-    (fetch as ReturnType<typeof vi.fn>)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({ data: page1, nextCursor: "2026-03-28T10:00:00Z" }),
-      })
-      .mockReturnValueOnce(new Promise(() => {})); // hang on second fetch
+    setupFetchMockWithHang(
+      [{ ok: true, data: page1, nextCursor: "2026-03-28T10:00:00Z" }],
+      1 // hang on second feed call
+    );
 
     render(<FeedList />);
 
@@ -186,5 +210,58 @@ describe("FeedList", () => {
     await waitFor(() => {
       expect(screen.getAllByTestId("skeleton-card").length).toBeGreaterThanOrEqual(1);
     });
+  });
+
+  it("renders filter controls", async () => {
+    setupFetchMock([{ ok: true, data: [], nextCursor: null }]);
+
+    render(<FeedList />);
+
+    await waitFor(() => {
+      expect(screen.getByLabelText("워크스페이스")).toBeDefined();
+      expect(screen.getByLabelText("채널")).toBeDefined();
+      expect(screen.getByPlaceholderText(/태그 검색/)).toBeDefined();
+    });
+  });
+
+  it("re-fetches feed with filter params when filters change", async () => {
+    const allCalls: string[] = [];
+
+    (fetch as ReturnType<typeof vi.fn>).mockImplementation((url: string) => {
+      allCalls.push(url);
+      if (url.includes("/api/workspaces")) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ data: [{ id: "ws-1", name: "Alpha", icon_url: null }] }),
+        });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ data: [], nextCursor: null }),
+      });
+    });
+
+    render(<FeedList />);
+
+    // Wait for initial load and workspaces to populate
+    await waitFor(() => {
+      expect(screen.getByText(/아직 공유된 링크가 없어요/)).toBeDefined();
+      const select = screen.getByLabelText("워크스페이스") as HTMLSelectElement;
+      expect(select.options.length).toBeGreaterThan(1);
+    });
+
+    const callCountBefore = allCalls.length;
+
+    // Change workspace filter
+    fireEvent.change(screen.getByLabelText("워크스페이스"), {
+      target: { value: "ws-1" },
+    });
+
+    // Wait for a new fetch call that includes the filter param
+    await waitFor(() => {
+      const newCalls = allCalls.slice(callCountBefore);
+      const hasFilteredCall = newCalls.some((url) => url.includes("workspace_id=ws-1"));
+      expect(hasFilteredCall).toBe(true);
+    }, { timeout: 3000 });
   });
 });
