@@ -5,7 +5,7 @@
       "title": "프로젝트 초기 설정",
       "status": "in_progress",
       "tasks": [
-        { "id": 1, "name": "Turborepo 모노레포 초기화", "status": "reviewer_issues" },
+        { "id": 1, "name": "Turborepo 모노레포 초기화", "status": "coder_done" },
         { "id": 2, "name": "Supabase DB 스키마 설정", "status": "pending" },
         { "id": 3, "name": "Shared 패키지 설정", "status": "pending" }
       ]
