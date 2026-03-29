@@ -41,11 +41,11 @@
     {
       "id": "005-webapp-feed",
       "title": "웹앱 통합 피드",
-      "status": "in_progress",
+      "status": "qa",
       "tasks": [
         { "id": 1, "name": "피드 API 및 데이터 조회", "status": "reviewer_pass" },
         { "id": 2, "name": "피드 카드 UI 컴포넌트", "status": "reviewer_pass" },
-        { "id": 3, "name": "무한스크롤 피드 페이지", "status": "coder_done" }
+        { "id": 3, "name": "무한스크롤 피드 페이지", "status": "reviewer_pass" }
       ]
     },
     {
