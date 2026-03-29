@@ -3,11 +3,11 @@
     {
       "id": "001-project-setup",
       "title": "프로젝트 초기 설정",
-      "status": "in_progress",
+      "status": "qa",
       "tasks": [
         { "id": 1, "name": "Turborepo 모노레포 초기화", "status": "reviewer_pass" },
         { "id": 2, "name": "Supabase DB 스키마 설정", "status": "reviewer_pass" },
-        { "id": 3, "name": "Shared 패키지 설정", "status": "coder_done" }
+        { "id": 3, "name": "Shared 패키지 설정", "status": "reviewer_pass" }
       ]
     },
     {
