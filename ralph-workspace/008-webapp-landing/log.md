@@ -51,3 +51,21 @@
 - **Status:** PASS
 - **CLAUDE.md update:** N/A — no new patterns discovered
 - **Task DONE**
+
+### [QA] Round 1
+- **Story:** 008-webapp-landing
+- **Status:** PASS
+- **Tests:** PASS — 188 tests across all 3 packages (shared: 30, slack-bot: 55, web: 103)
+- **Lint/Typecheck/Build:** PASS — all clean, zero warnings
+- **QA — Live server:**
+  - ✅ 비로그인 사용자가 루트 URL 접속 시 랜딩페이지가 표시된다 — http://localhost:3000 returns 200, landing page renders with full content
+  - ✅ 서비스 소개 콘텐츠가 포함된다 — "linkdigest v1.0" terminal tag, headline "링크는 공유하고, 요약은 맡기세요", subtext, 3 feature cards (자동 감지, AI 요약, 카드뉴스)
+  - ✅ "Slack으로 로그인" 버튼이 있고 클릭 시 OAuth 플로우가 시작된다 — clicked button, redirected to slack.com/workspace-signin with correct OAuth params (openid_connect=1, redirect_uri to supabase callback)
+  - ✅ 디자인 톤이 딥 네이비 다크 배경, 노란색 액센트와 일치한다 — confirmed via screenshots
+  - ✅ 모바일 퍼스트로 반응형이다 — tested at 375x812, 768x1024, 1280x720; all viewports render correctly with proper stacking/grid layout
+- **Code quality (simplify):** PASS — no actionable issues found; patterns consistent with codebase conventions
+- **Security:** PASS — OAuth uses window.location.origin (safe), Supabase Auth library handles flow, no user inputs, no XSS vectors, no hardcoded secrets
+- **Design:** PASS — deep navy background, yellow accent CTA, terminal-style elements, bold typography, responsive layout matches Ralphthon aesthetic from brainstorm.md
+- **Spec alignment:** PASS — landing page serves as entry point per spec, CTA uses Supabase Auth slack_oidc per architecture, demo scenario works end-to-end
+- **Screenshots:** qa-landing.png, responsive-mobile.png, responsive-tablet.png, responsive-desktop.png, mobile-scrolled.png
+- **Story DONE**

@@ -68,7 +68,7 @@
     {
       "id": "008-webapp-landing",
       "title": "웹앱 랜딩페이지",
-      "status": "qa",
+      "status": "done",
       "tasks": [
         { "id": 1, "name": "랜딩페이지 구현", "status": "reviewer_pass" }
       ]
