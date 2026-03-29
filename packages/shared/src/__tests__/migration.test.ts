@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
-const MIGRATIONS_DIR = join(__dirname, "../../../../supabase/migrations");
+const MIGRATIONS_DIR = join(process.cwd(), "../../supabase/migrations");
 
 function getMigrationSQL(): string {
   const files = readdirSync(MIGRATIONS_DIR).filter((f) => f.endsWith(".sql"));
