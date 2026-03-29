@@ -41,3 +41,16 @@
   - ✅ OG 메타태그에 3줄 요약 텍스트 + 카드뉴스 1번 이미지가 포함된다
   - ✅ 유효하지 않은 share_token 시 에러 메시지 표시
 - **CLAUDE.md update:** N/A — share page follows existing patterns (service client, inline styles, theme constants); no new project-wide conventions discovered
+
+### [Reviewer] Round 2
+- **Task:** 공유 페이지 및 OG 메타태그
+- **Status:** PASS
+- **Tests:** PASS — all 94 web tests pass (10 share-page tests)
+- **Lint/Typecheck/Build:** PASS — zero warnings, build successful, `/share/[token]` correctly dynamic
+- **QA — Live server:** Verified invalid token shows error message "이 링크는 더 이상 유효하지 않습니다" with "LinkDigest 홈으로" CTA linking to `/`. Error page screenshot captured. Share route not in PROTECTED_ROUTES (accessible without auth). OG fallback metadata correct (title: "LinkDigest", description: "Slack 링크 자동 요약 & 카드뉴스"). Console clean (only HMR websocket in headless mode).
+- **Code quality (simplify):** Fixed: (1) Double-fetch — `getSharedMessage()` called twice per page load (generateMetadata + page render). Wrapped with React `cache()` to deduplicate within same request. (2) Hardcoded colors — 5 new theme constants added (`bgCard`, `bgCarousel`, `bgOverlay`, `textMutedLight`, `accentLight`, `accentBorder`), replaced all raw rgba/hex strings in both share-card.tsx and feed-card.tsx for consistency.
+- **Security (manual):** PASS — no auth bypass risk (intentionally public), parameterized Supabase queries prevent injection, React auto-escapes output (no XSS), UUID share tokens unguessable (no IDOR), error state shows generic message (no leaked internals), no hardcoded secrets.
+- **Design (gstack):** PASS — error state matches design direction (deep navy background, monospace font, yellow accent CTA, centered layout). Page structure matches brainstorm.md wireframe (header with logo only, carousel, summary, tags, CTA).
+- **Spec alignment:** PASS — share page layout matches spec wireframe, OG tags include summary + first card image, no user/date shown, CTA links to landing page, invalid token shows error per interaction states table, service client bypasses auth correctly.
+- **CLAUDE.md update:** N/A — theme constants are self-documenting in theme.ts; React cache pattern is standard Next.js practice
+- **Task DONE**
