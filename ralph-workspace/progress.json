@@ -59,7 +59,7 @@
     {
       "id": "007-webapp-share",
       "title": "웹앱 메시지 공유",
-      "status": "qa",
+      "status": "qa_issues",
       "tasks": [
         { "id": 1, "name": "공유 링크 생성 API", "status": "reviewer_pass" },
         { "id": 2, "name": "공유 페이지 및 OG 메타태그", "status": "reviewer_pass" }

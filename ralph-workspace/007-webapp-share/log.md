@@ -54,3 +54,18 @@
 - **Spec alignment:** PASS — share page layout matches spec wireframe, OG tags include summary + first card image, no user/date shown, CTA links to landing page, invalid token shows error per interaction states table, service client bypasses auth correctly.
 - **CLAUDE.md update:** N/A — theme constants are self-documenting in theme.ts; React cache pattern is standard Next.js practice
 - **Task DONE**
+
+### [QA] Round 1
+- **Story:** 007-webapp-share
+- **Status:** ISSUES
+- **Tests:** PASS — all 94 web tests pass
+- **Lint/Typecheck/Build:** PASS — zero warnings, build successful
+- **QA — Live server:** Invalid share token shows error page with correct error message, CTA navigates to home. Share API correctly returns 401 for unauthenticated requests. Console clean (only HMR websocket in headless mode).
+- **Code quality:** Carousel duplication between ShareCard and FeedCard noted but accepted as current codebase pattern. No actionable issues beyond the functional gap below.
+- **Security:** PASS — auth check before any action, parameterized queries, `randomUUID()` for tokens, no leaked internals, no hardcoded secrets, React auto-escapes output.
+- **Design:** PASS — error state matches design direction (deep navy, monospace, yellow accent CTA). Share page wireframe matches brainstorm.md spec.
+- **Spec alignment:** FAIL on 2 of 7 acceptance criteria
+- **Findings:**
+  1. **Share button not functional:** The `공유` button in `feed-card.tsx` (line 261) has no `onClick` handler. It renders correctly but does nothing when clicked. The `POST /api/share` endpoint exists and works, but the button is not wired to call it. This violates acceptance criteria: "피드 카드의 공유 버튼을 누르면 공개 공유 URL이 생성된다".
+  2. **No clipboard copy or toast:** There is no `navigator.clipboard.writeText()` call or toast notification component anywhere in the share flow. This violates acceptance criteria: "공유 URL이 클립보드에 복사되고 토스트로 확인된다".
+- **Screenshots:** `ralph-workspace/007-webapp-share/qa-invalid-share.png` (invalid token error page)
