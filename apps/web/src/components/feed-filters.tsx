@@ -112,7 +112,7 @@ export default function FeedFilters({ onFilterChange }: FeedFiltersProps) {
         width: "100%",
       }}
     >
-      <div style={{ display: "flex", gap: "0.5rem" }}>
+      <div style={{ display: "flex", gap: "1rem" }}>
         <label style={{ flex: 1, minWidth: 0 }}>
           <span className="sr-only" style={{
             position: "absolute",
