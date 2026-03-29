@@ -39,3 +39,18 @@
 - **Design (gstack):** N/A — infrastructure task, no UI to review
 - **Spec alignment:** PASS — monorepo structure matches spec exactly (`apps/web`, `apps/slack-bot`, `packages/shared`), Turborepo + pnpm workspaces, Socket Mode, Next.js App Router
 - **CLAUDE.md update:** N/A — will add after lint issue is resolved
+
+### [Coder] Round 2
+- **Task:** Turborepo 모노레포 초기화
+- **Status:** DONE
+- **Files changed:**
+  - `apps/web/eslint.config.mjs` (created — native ESLint flat config)
+  - `apps/web/package.json` (updated — lint script: `next lint` → `eslint .`, added eslint + eslint-config-next, removed @eslint/eslintrc)
+  - `pnpm-lock.yaml` (updated)
+- **What was done:** Fixed reviewer issue: `pnpm lint` was failing because `next lint` is deprecated and requires interactive ESLint setup. Replaced with direct ESLint CLI using native flat config (`eslint-config-next/core-web-vitals` + `eslint-config-next/typescript`). Removed unused `@eslint/eslintrc` FlatCompat shim.
+- **Self-validation:**
+  - `pnpm lint` — PASS (ESLint runs cleanly, no errors)
+  - `pnpm typecheck` — PASS
+  - `pnpm build` — PASS
+  - `pnpm install` — PASS (all workspace projects resolve)
+- **CLAUDE.md update:** N/A — will add lint pattern after reviewer confirms fix
