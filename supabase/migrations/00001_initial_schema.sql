@@ -1,9 +1,12 @@
 -- migration: 00001_initial_schema
 -- purpose: create LinkDigest core tables with RLS
 -- affected tables: workspaces, channels, users, messages, urls, tags
+--
+-- NOTE: workspaces and channels select policies are deferred until after
+-- the users table is created, because they reference public.users.
 
 -- ============================================================
--- 1. workspaces — Slack 워크스페이스
+-- 1. workspaces — Slack workspace (select policy deferred)
 -- ============================================================
 create table if not exists public.workspaces (
   id uuid primary key default gen_random_uuid(),
@@ -16,19 +19,6 @@ create table if not exists public.workspaces (
 
 alter table public.workspaces enable row level security;
 
--- authenticated users can read workspaces they belong to (via users table)
-create policy "users can view own workspaces"
-  on public.workspaces for select
-  to authenticated
-  using (
-    exists (
-      select 1 from public.users u
-      where u.workspace_id = workspaces.id
-        and u.auth_user_id = (select auth.uid())
-    )
-  );
-
--- service role can manage workspaces (slack bot inserts)
 create policy "service role manages workspaces"
   on public.workspaces for all
   to service_role
@@ -36,7 +26,7 @@ create policy "service role manages workspaces"
   with check (true);
 
 -- ============================================================
--- 2. channels — Slack 채널
+-- 2. channels — Slack channel (select policy deferred)
 -- ============================================================
 create table if not exists public.channels (
   id uuid primary key default gen_random_uuid(),
@@ -50,17 +40,6 @@ create table if not exists public.channels (
 
 alter table public.channels enable row level security;
 
-create policy "users can view channels in own workspace"
-  on public.channels for select
-  to authenticated
-  using (
-    exists (
-      select 1 from public.users u
-      where u.workspace_id = channels.workspace_id
-        and u.auth_user_id = (select auth.uid())
-    )
-  );
-
 create policy "service role manages channels"
   on public.channels for all
   to service_role
@@ -68,7 +47,7 @@ create policy "service role manages channels"
   with check (true);
 
 -- ============================================================
--- 3. users — Slack 사용자
+-- 3. users — Slack user
 -- ============================================================
 create table if not exists public.users (
   id uuid primary key default gen_random_uuid(),
@@ -101,7 +80,33 @@ create policy "service role manages users"
   with check (true);
 
 -- ============================================================
--- 4. messages — 링크 포함 메시지
+-- 4. Deferred select policies for workspaces and channels
+--    (now that public.users exists)
+-- ============================================================
+create policy "users can view own workspaces"
+  on public.workspaces for select
+  to authenticated
+  using (
+    exists (
+      select 1 from public.users u
+      where u.workspace_id = workspaces.id
+        and u.auth_user_id = (select auth.uid())
+    )
+  );
+
+create policy "users can view channels in own workspace"
+  on public.channels for select
+  to authenticated
+  using (
+    exists (
+      select 1 from public.users u
+      where u.workspace_id = channels.workspace_id
+        and u.auth_user_id = (select auth.uid())
+    )
+  );
+
+-- ============================================================
+-- 5. messages — link messages
 -- ============================================================
 create table if not exists public.messages (
   id uuid primary key default gen_random_uuid(),
@@ -120,7 +125,6 @@ create table if not exists public.messages (
 
 alter table public.messages enable row level security;
 
--- authenticated users can view messages in their workspace
 create policy "users can view messages in own workspace"
   on public.messages for select
   to authenticated
@@ -133,7 +137,6 @@ create policy "users can view messages in own workspace"
     )
   );
 
--- public access via share_token (anon can view shared messages)
 create policy "anyone can view shared messages by share_token"
   on public.messages for select
   to anon
@@ -146,7 +149,7 @@ create policy "service role manages messages"
   with check (true);
 
 -- ============================================================
--- 5. urls — 메시지 내 URL (최대 5개)
+-- 6. urls — URLs within a message (max 5)
 -- ============================================================
 create table if not exists public.urls (
   id uuid primary key default gen_random_uuid(),
@@ -190,7 +193,7 @@ create policy "service role manages urls"
   with check (true);
 
 -- ============================================================
--- 6. tags — 자동 생성 태그
+-- 7. tags — auto-generated tags
 -- ============================================================
 create table if not exists public.tags (
   id uuid primary key default gen_random_uuid(),
