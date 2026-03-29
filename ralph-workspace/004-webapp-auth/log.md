@@ -67,3 +67,17 @@
   - ✅ 로그아웃 버튼 동작 — signOut() + router.push('/login')
   - ✅ 워크스페이스 정보 DB 저장 — Supabase Auth slack_oidc stores identity info automatically
 - **CLAUDE.md update:** N/A — env var convention is already documented, theme pattern is straightforward
+
+### [Reviewer] Round 2
+- **Task:** Supabase Auth + Slack OAuth 연동
+- **Status:** ISSUES
+- **Tests:** PASS — all 102 tests pass (30 shared + 17 web + 55 slack-bot)
+- **Lint/Typecheck/Build:** PASS — zero warnings, build successful
+- **QA — Live server:**
+  - **BLOCKER: Env vars still not loaded by `pnpm dev --filter web`.** The coder changed server-side code to use `SUPABASE_URL`/`SUPABASE_ANON_KEY` (non-prefixed), matching the root `.env` — but Next.js only loads `.env` files from its own project directory (`apps/web/`), not the monorepo root. Running `pnpm dev --filter web` results in a 500 crash at `middleware.ts:13` with "Your project's URL and Key are required to create a Supabase client!" — the exact same error as Round 1. The app only works if you manually `source .env` before starting. **Fix:** Create `apps/web/.env` that loads from root (symlink, or use `@next/env` with rootDir, or add a turbo `globalPassThroughEnv` config, or simply create `apps/web/.env` with the needed vars).
+  - With env vars manually sourced: Landing page (/) renders 200 with correct design. Login page (/login) renders with "Slack으로 로그인" button. Clicking it redirects to `slack.com/workspace-signin` with correct params including `openid_connect=1`. Unauthenticated /feed redirects to /login. /auth/callback with no code redirects to /login. All acceptance criteria verified.
+- **Code quality (simplify):** Minor — `logout-button.tsx:26` has magic color `#334155` not in theme constants. Otherwise all previous issues (duplication, magic strings, unawaited signInWithOAuth) are fixed.
+- **Security (manual):** PASS — no injection risks, no hardcoded secrets, proper error handling without leaking internals.
+- **Design (gstack):** PASS — deep navy #0a0e27, monospace fonts, yellow #facc15 accent. Screenshots at /tmp/004-r2-landing.png, /tmp/004-r2-login.png.
+- **Spec alignment:** PASS — auth implementation matches brainstorm.md architecture decisions.
+- **CLAUDE.md update:** N/A — env var issue is a fix item, not a convention to document
