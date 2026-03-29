@@ -33,9 +33,9 @@
     {
       "id": "004-webapp-auth",
       "title": "웹앱 Slack OAuth 로그인",
-      "status": "pending",
+      "status": "in_progress",
       "tasks": [
-        { "id": 1, "name": "Supabase Auth + Slack OAuth 연동", "status": "pending" }
+        { "id": 1, "name": "Supabase Auth + Slack OAuth 연동", "status": "coder_done" }
       ]
     },
     {
