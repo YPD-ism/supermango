@@ -6,22 +6,25 @@ import { join } from "node:path";
 const CARD_WIDTH = 1080;
 const CARD_HEIGHT = 1080;
 
-let fontDataCache: ArrayBuffer | null = null;
+let fontDataPromise: Promise<ArrayBuffer> | null = null;
 
-async function loadFont(): Promise<ArrayBuffer> {
-  if (fontDataCache) return fontDataCache;
-  // In dev (tsx), __dirname is available. In built output, resolve from cwd.
-  const base =
-    typeof __dirname !== "undefined"
-      ? __dirname
-      : join(process.cwd(), "src");
-  const fontPath = join(base, "assets", "NotoSansKR-Bold.ttf");
-  const buffer = await readFile(fontPath);
-  fontDataCache = buffer.buffer.slice(
-    buffer.byteOffset,
-    buffer.byteOffset + buffer.byteLength,
-  );
-  return fontDataCache;
+function loadFont(): Promise<ArrayBuffer> {
+  if (!fontDataPromise) {
+    fontDataPromise = (async () => {
+      // In dev (tsx), __dirname is available. In built output, resolve from cwd.
+      const base =
+        typeof __dirname !== "undefined"
+          ? __dirname
+          : join(process.cwd(), "src");
+      const fontPath = join(base, "assets", "NotoSansKR-Bold.ttf");
+      const buffer = await readFile(fontPath);
+      return buffer.buffer.slice(
+        buffer.byteOffset,
+        buffer.byteOffset + buffer.byteLength,
+      );
+    })();
+  }
+  return fontDataPromise;
 }
 
 function buildCardMarkup(

@@ -57,20 +57,18 @@ describe("generateCardImages", () => {
     ).rejects.toThrow("3줄 요약이 필요합니다");
   });
 
-  it("includes card number in each image (1/3, 2/3, 3/3)", async () => {
+  it("produces distinct images for each card", async () => {
     const summary = [
       "첫 번째 요약입니다",
       "두 번째 요약입니다",
       "세 번째 요약입니다",
     ];
 
-    // We can't easily inspect rendered text in PNG, but we verify
-    // that each image is unique (different content per card)
     const result = await generateCardImages(summary);
 
-    const sizes = result.map((buf) => buf.length);
-    // At least some should differ in size due to different text
-    const uniqueSizes = new Set(sizes);
-    expect(uniqueSizes.size).toBeGreaterThanOrEqual(1);
+    // Each card has different text and card number, so buffers must differ
+    expect(Buffer.compare(result[0], result[1])).not.toBe(0);
+    expect(Buffer.compare(result[1], result[2])).not.toBe(0);
+    expect(Buffer.compare(result[0], result[2])).not.toBe(0);
   });
 });
