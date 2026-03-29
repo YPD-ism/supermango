@@ -22,3 +22,9 @@
   - ✅ 필터 변경 시 피드가 즉시 갱신된다
   - ✅ 일치하는 태그가 없을 때 빈 상태 메시지가 표시된다
 - **CLAUDE.md update:** N/A — no new gotchas or patterns discovered
+
+### [Reviewer] Round 1
+- **Task:** 필터 UI 및 API 연동
+- **Status:** PASS
+- **CLAUDE.md update:** N/A — no new gotchas or patterns discovered
+- **Task DONE**
