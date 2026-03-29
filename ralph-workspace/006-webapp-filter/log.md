@@ -28,3 +28,15 @@
 - **Status:** PASS
 - **CLAUDE.md update:** N/A — no new gotchas or patterns discovered
 - **Task DONE**
+
+### [QA] Round 1
+- **Story:** 006-webapp-filter
+- **Status:** PASS
+- **Tests:** PASS — 161 tests across 3 packages (30 shared, 55 slack-bot, 76 web), all green
+- **Lint/Typecheck/Build:** PASS — all clean with zero warnings
+- **QA — Live server:** Auth-protected APIs return 401 correctly. Feed API accepts workspace_id, channel_id, tag filter params and returns proper error responses. Login page renders correctly with design-direction styling. Unable to test authenticated filter UI via headless browser (Slack OAuth required), but comprehensive unit/integration tests (10 filter component tests, 7 feed API filter tests, 4 workspace API tests, 6 channel API tests) cover all acceptance criteria including: workspace dropdown population, channel dropdown population, channel filtering by workspace, tag search, filter combination, filter-triggered re-fetch, and channel reset on workspace change.
+- **Code quality (simplify):** Minor findings noted but not blocking: duplicate sr-only inline styles (redundant with Tailwind class), #0f1535 color not in theme, no debounce on tag search input, no AbortController for race condition prevention on rapid filter changes
+- **Security (manual):** PASS — no injection risks (Supabase parameterized queries), no hardcoded secrets, error responses don't leak internals. Data scoping relies on Supabase RLS (standard pattern for this project).
+- **Design (gstack):** Login page matches design direction (deep navy, yellow accent, monospace). Filter UI code follows same theme tokens. Cannot screenshot authenticated filter UI.
+- **Spec alignment:** PASS — matches spec wireframe (workspace/channel dropdowns + tag search at feed top), demo scenario supported (tag filtering works), architecture follows brainstorm decisions
+- **Story DONE**

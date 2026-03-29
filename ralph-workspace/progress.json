@@ -51,7 +51,7 @@
     {
       "id": "006-webapp-filter",
       "title": "웹앱 필터링",
-      "status": "qa",
+      "status": "done",
       "tasks": [
         { "id": 1, "name": "필터 UI 및 API 연동", "status": "reviewer_pass" }
       ]
