@@ -24,3 +24,20 @@
 - **Spec alignment:** PASS — share_token UUID matches spec data model, auth requirement aligns with feed UX, `/share/{token}` URL format matches share page route design, existing token reuse correct.
 - **CLAUDE.md update:** N/A — service role client pattern is local to share API; Database UPDATE→never constraint is documented in code comment
 - **Task DONE**
+
+### [Coder] Round 2
+- **Task:** 공유 페이지 및 OG 메타태그
+- **Status:** DONE
+- **Files changed:**
+  - `apps/web/src/app/share/[token]/page.tsx` (new) — SSR share page with generateMetadata for OG tags, error state for invalid tokens
+  - `apps/web/src/components/share-card.tsx` (new) — Client component with carousel, summary bullets, tags (no user/date/share button)
+  - `apps/web/src/__tests__/share-page.test.tsx` (new) — 10 tests covering rendering, OG metadata, error handling, query verification
+- **What was done:** Implemented public share page at `/share/[token]` that fetches message by share_token using service client (no auth required). Page renders carousel with navigation, 3-line bullet summary, tags, and CTA button ("나도 써보기 →") linking to landing page. `generateMetadata` sets OG title, description (full summary), and first card image. Invalid tokens show error message "이 링크는 더 이상 유효하지 않습니다" with link to home.
+- **Self-validation:**
+  - ✅ 공유 URL로 로그인 없이 접근할 수 있다 — not in PROTECTED_ROUTES, uses service client
+  - ✅ 태그, 카드뉴스 캐러셀, 3줄 요약, CTA 버튼이 표시된다
+  - ✅ 공유자/날짜는 표시되지 않는다 — ShareCard omits user/date section
+  - ✅ CTA 클릭 시 랜딩페이지로 이동한다 — Link href="/"
+  - ✅ OG 메타태그에 3줄 요약 텍스트 + 카드뉴스 1번 이미지가 포함된다
+  - ✅ 유효하지 않은 share_token 시 에러 메시지 표시
+- **CLAUDE.md update:** N/A — share page follows existing patterns (service client, inline styles, theme constants); no new project-wide conventions discovered
