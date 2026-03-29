@@ -105,3 +105,23 @@
 - **Status:** PASS
 - **CLAUDE.md update:** N/A — no new patterns discovered
 - **Task DONE**
+
+### [QA] Round 1
+- **Story:** 004-webapp-auth
+- **Status:** PASS
+- **Tests:** PASS — 102 tests (30 shared + 17 web + 55 slack-bot), all passing
+- **Lint/Typecheck/Build:** PASS — zero warnings, build successful
+- **QA — Live server:**
+  - Landing page (/) renders 200 with correct design (deep navy, bold typography, yellow CTA)
+  - "시작하기" CTA links to /login
+  - Login page (/login) renders "Slack으로 로그인" button
+  - Clicking button redirects to `slack.com/workspace-signin` with correct params including `openid_connect=1` and Supabase callback URL
+  - Unauthenticated /feed redirects to /login (verified via browser URL change)
+  - /auth/callback with no code redirects to /login
+  - No console errors on fresh page load
+  - Responsive layout works on mobile (375px)
+- **Code quality:** PASS — theme constants used consistently, no magic color strings, no duplication, signInWithOAuth properly awaited with error handling
+- **Security:** PASS — no hardcoded secrets, no injection risks, proper error handling without leaking internals, uses getUser() (not getSession()) for secure server-side auth, redirect URL validated by Supabase dashboard
+- **Design:** PASS — deep navy #0a0e27, monospace fonts, yellow #facc15 accent, coherent Ralphthon-style design. Screenshots at /tmp/004-qa-landing.png, /tmp/004-qa-login.png
+- **Spec alignment:** PASS — auth is foundational for webapp stories 005-008, architecture matches brainstorm.md decisions, demo scenario entry point works
+- **Story DONE**

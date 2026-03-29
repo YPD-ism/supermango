@@ -33,7 +33,7 @@
     {
       "id": "004-webapp-auth",
       "title": "웹앱 Slack OAuth 로그인",
-      "status": "qa",
+      "status": "done",
       "tasks": [
         { "id": 1, "name": "Supabase Auth + Slack OAuth 연동", "status": "reviewer_pass" }
       ]
