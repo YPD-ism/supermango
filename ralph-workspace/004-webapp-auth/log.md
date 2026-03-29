@@ -27,3 +27,20 @@
   - ✅ 로그아웃 버튼 동작 — signOut() + router.push('/login')
   - ✅ 워크스페이스 정보 DB 저장 — Supabase Auth slack_oidc stores identity info automatically
 - **CLAUDE.md update:** N/A — Supabase SSR patterns are standard and documented in the code itself
+
+### [Reviewer] Round 1
+- **Task:** Supabase Auth + Slack OAuth 연동
+- **Status:** ISSUES
+- **Tests:** PASS — all 17 web tests pass, 102 total across all packages
+- **Lint/Typecheck/Build:** PASS — zero warnings, build successful
+- **QA — Live server:**
+  - **BLOCKER: Env var mismatch.** Code uses `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` but `.env` has `SUPABASE_URL` and `SUPABASE_ANON_KEY`. App crashes on startup with "Your project's URL and Key are required to create a Supabase client!" — middleware.ts:13 throws. After manually exporting `NEXT_PUBLIC_*` env vars mapped from the existing ones, the app works correctly. Fix: add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` to `.env` (or create `apps/web/.env.local`).
+  - With correct env vars: Landing page (/) renders correctly (200). Login page (/login) renders with "Slack으로 로그인" button. Clicking it redirects to Slack OAuth (slack.com/workspace-signin with correct params including openid_connect=1). Unauthenticated /feed redirects to /login (307). /auth/callback with no code redirects to /login (307). All acceptance criteria verified except full OAuth round-trip (requires real Slack credentials).
+- **Code quality (simplify):**
+  - Duplicated inline styles across page.tsx, login/page.tsx, feed/page.tsx (same backgroundColor, color, fontFamily). Extract to shared constants or apply base styles in layout.tsx.
+  - Magic color strings (#0a0e27, #e2e8f0, #94a3b8, #facc15) scattered with no token layer.
+  - `login/page.tsx`: `signInWithOAuth()` not awaited — errors silently swallowed. Should await and handle error result.
+- **Security (manual):** PASS — no injection risks, no hardcoded secrets, proper use of anon key (public by design), redirect URL validated by Supabase dashboard config.
+- **Design (gstack):** PASS — matches design direction from brainstorm.md (deep navy #0a0e27, monospace fonts, yellow #facc15 accent CTA). Screenshots at /tmp/004-landing.png, /tmp/004-login.png.
+- **Spec alignment:** PASS — auth implementation serves broader feed/share goals, architecture matches brainstorm.md decisions.
+- **CLAUDE.md update:** N/A — env var naming is an issue to fix, not a convention to document
