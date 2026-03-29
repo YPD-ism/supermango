@@ -31,3 +31,5 @@ Ralph loop engine with planner, coder, and reviewer for autonomous feature imple
 - **Lint:** `apps/web` uses ESLint flat config (`eslint.config.mjs`) with `eslint .` — do NOT use `next lint`
 - **Dev:** `pnpm dev` runs all apps, `pnpm dev --filter web` / `pnpm dev --filter slack-bot` for individual
 - **Slack bot:** exits cleanly with env var message if `SLACK_BOT_TOKEN`, `SLACK_SIGNING_SECRET`, `SLACK_APP_TOKEN` are missing
+- **DB Migrations:** SQL files in `supabase/migrations/` — run on hosted Supabase (no local CLI)
+- **Tests:** `packages/shared` uses vitest (`pnpm test --filter @linkdigest/shared`), `pnpm test` runs all

@@ -70,3 +70,21 @@
 - **Spec alignment:** PASS — monorepo structure matches spec exactly
 - **CLAUDE.md update:** Added LinkDigest project section with lint, dev, and slack-bot conventions
 - **Task DONE**
+
+### [Coder] Round 3
+- **Task:** Supabase DB 스키마 설정
+- **Status:** DONE
+- **Files changed:**
+  - `supabase/migrations/00001_initial_schema.sql` (created)
+  - `packages/shared/src/__tests__/migration.test.ts` (created)
+  - `packages/shared/package.json` (updated — added vitest, @types/node, test script)
+- **What was done:** Created Supabase migration SQL with 6 tables (workspaces, channels, users, messages, urls, tags), RLS policies for workspace-scoped access and share_token-based public access, foreign key relationships, indexes for common query patterns, and updated_at triggers. Added TDD migration tests (11 assertions) validating table creation, RLS, FKs, required columns, and share_token policy.
+- **Self-validation:**
+  - All 6 tables defined with correct columns — PASS
+  - Foreign key relationships (channels→workspaces, users→workspaces, messages→channels+users, urls→messages, tags→messages) — PASS
+  - RLS enabled on all tables, workspace-scoped select for authenticated, share_token-based anon select on messages/urls/tags, service_role full access — PASS
+  - `pnpm test` — PASS (11 tests)
+  - `pnpm lint` — PASS
+  - `pnpm typecheck` — PASS
+  - `pnpm build` — PASS
+- **CLAUDE.md update:** Added migration and test conventions
