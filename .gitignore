@@ -23,3 +23,6 @@ dist/
 # Runtime
 sqlite.db
 .env
+
+# Ralph loop logs (may contain secrets from env)
+ralph-workspace/logs/
