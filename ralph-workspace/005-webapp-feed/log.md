@@ -44,3 +44,18 @@
 - **Spec alignment:** PASS — component matches spec wireframe exactly, supports demo scenario, compatible with upcoming stories (006-filter, 007-share).
 - **CLAUDE.md update:** N/A — no new patterns or gotchas discovered
 - **Task DONE**
+
+### [Coder] Round 3
+- **Task:** 무한스크롤 피드 페이지
+- **Status:** DONE
+- **Files changed:**
+  - `apps/web/src/components/feed-list.tsx` (created)
+  - `apps/web/src/__tests__/feed-list.test.tsx` (created)
+  - `apps/web/src/app/feed/page.tsx` (modified)
+- **What was done:** Implemented FeedList client component with infinite scroll using IntersectionObserver. Fetches from /api/feed with cursor-based pagination. Includes SkeletonCard with shimmer animation for loading states (initial + pagination), empty state message with bot invite guide, error state with retry button. Updated feed page to integrate FeedList replacing the static empty state.
+- **Self-validation:**
+  - ✅ 스크롤 시 다음 페이지를 자동 로딩 — IntersectionObserver on sentinel div triggers fetchFeed(nextCursor), verified by test
+  - ✅ 로딩 중 스켈레톤 카드가 표시 — SkeletonCard with shimmer animation shown during initial and pagination loads, verified by tests
+  - ✅ 데이터가 없을 때 "아직 공유된 링크가 없어요" + 봇 초대 가이드 — empty state with both messages, verified by test
+  - ✅ 에러 시 재시도 버튼이 표시 — error state with retry button that re-fetches, verified by tests
+- **CLAUDE.md update:** N/A — follows existing patterns, no new gotchas discovered
