@@ -1,0 +1,24 @@
+### [Coder] Round 1
+- **Task:** 필터 UI 및 API 연동
+- **Status:** DONE
+- **Files changed:**
+  - `apps/web/src/app/api/feed/route.ts` — Added workspace_id, channel_id, tag filter params with dynamic !inner joins
+  - `apps/web/src/app/api/workspaces/route.ts` — New endpoint to list user's workspaces
+  - `apps/web/src/app/api/channels/route.ts` — New endpoint to list channels with optional workspace filter
+  - `apps/web/src/components/feed-filters.tsx` — New filter component with workspace/channel dropdowns and tag search
+  - `apps/web/src/components/feed-list.tsx` — Integrated FeedFilters, re-fetches on filter change
+  - `apps/web/src/__tests__/feed-api.test.ts` — Added 7 tests for filter params
+  - `apps/web/src/__tests__/workspaces-api.test.ts` — 4 tests for workspaces API
+  - `apps/web/src/__tests__/channels-api.test.ts` — 6 tests for channels API
+  - `apps/web/src/__tests__/feed-filters.test.tsx` — 10 tests for filter UI component
+  - `apps/web/src/__tests__/feed-list.test.tsx` — Updated existing tests + 2 new for filter integration
+  - `apps/web/src/__tests__/feed-page.test.tsx` — Added fetch mock for FeedFilters compatibility
+- **What was done:** Implemented full filter system: feed API accepts workspace_id, channel_id, tag params using Supabase !inner joins for related table filtering. Created workspaces/channels list APIs for dropdown population. Built FeedFilters component with workspace dropdown, channel dropdown (filtered by selected workspace), and tag search input. Integrated into FeedList with immediate re-fetch on filter change using ref-based pattern.
+- **Self-validation:**
+  - ✅ 워크스페이스 드롭다운에 사용자의 워크스페이스 목록이 표시된다
+  - ✅ 채널 드롭다운에 "모든 채널"과 개별 채널이 표시된다
+  - ✅ 태그 검색 입력이 동작한다
+  - ✅ 필터 조합이 가능하다
+  - ✅ 필터 변경 시 피드가 즉시 갱신된다
+  - ✅ 일치하는 태그가 없을 때 빈 상태 메시지가 표시된다
+- **CLAUDE.md update:** N/A — no new gotchas or patterns discovered
