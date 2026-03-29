@@ -99,3 +99,9 @@
   - ✅ 워크스페이스 정보 DB 저장 — Supabase Auth slack_oidc stores identity info automatically
   - ✅ Dev server starts without env var crash — verified `pnpm dev --filter web` starts cleanly
 - **CLAUDE.md update:** Added dotenv-cli pattern for monorepo env var loading
+
+### [Reviewer] Round 3
+- **Task:** Supabase Auth + Slack OAuth 연동
+- **Status:** PASS
+- **CLAUDE.md update:** N/A — no new patterns discovered
+- **Task DONE**
