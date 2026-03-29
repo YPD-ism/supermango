@@ -4,9 +4,15 @@ node_modules/
 .gstack/
 
 # Next.js
-/.next/
-/out/
+.next/
+out/
 next-env.d.ts
+
+# Build output
+dist/
+
+# Turbo
+.turbo/
 
 # TypeScript
 *.tsbuildinfo
