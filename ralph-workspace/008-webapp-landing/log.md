@@ -32,3 +32,16 @@
 - **Design (gstack):** PASS — matches Ralphthon aesthetic per brainstorm.md; deep navy + yellow accent; clear typography hierarchy; terminal-style elements; responsive layout works across viewports
 - **Spec alignment:** PASS — landing page serves as entry point per spec, provides CTA for share page (story 007), uses Supabase Auth slack_oidc per architecture
 - **CLAUDE.md update:** N/A — no new patterns discovered
+
+### [Coder] Round 2
+- **Task:** 랜딩페이지 구현
+- **Status:** DONE
+- **Files changed:** apps/web/src/lib/auth.ts (new), apps/web/src/lib/theme.ts (modified), apps/web/src/app/page.tsx (modified), apps/web/src/app/login/page.tsx (modified), apps/web/src/app/layout.tsx (modified), apps/web/src/__tests__/landing-page.test.tsx (modified), apps/web/src/__tests__/login-page.test.tsx (modified)
+- **What was done:** Fixed 4 reviewer code quality issues: (1) Extracted duplicate handleLogin to shared `lib/auth.ts` exporting `handleSlackLogin()`, updated both pages and tests; (2) Added accent opacity variants to theme.ts (`accentHover`, `accentGlow`, `accentGlowMd`, `accentShadow`), replaced all hardcoded rgba values in page.tsx; (3) Added `fonts.display` to theme.ts, replaced 4 hardcoded `'Outfit', sans-serif` references; (4) Moved Google Fonts from component `@import` to `next/font/google` in layout.tsx with `Space_Mono` and `Outfit`, using CSS variable for display font.
+- **Self-validation:**
+  - ✅ 서비스 이름, 핵심 가치 소개가 표시된다 — heading, subtext, 3 feature cards unchanged
+  - ✅ "Slack으로 로그인" 버튼이 눈에 띄게 배치된다 — yellow CTA button unchanged
+  - ✅ 클릭 시 Slack OAuth 플로우가 시작된다 — handleSlackLogin calls signInWithOAuth (test passes)
+  - ✅ 딥 네이비 다크 배경 + 노란색 액센트 CTA — colors unchanged, now via theme constants
+  - ✅ 모바일/태블릿/데스크탑 반응형 — responsive layout unchanged
+- **CLAUDE.md update:** N/A — no new patterns or gotchas discovered
