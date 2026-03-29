@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 720pt;
+    height: 405pt;
+    font-family: 'Pretendard', sans-serif;
+    background: #0a0e27;
+    color: #e8eaf6;
+    padding: 28pt 40pt;
+    display: flex;
+    flex-direction: column;
+    gap: 16pt;
+    overflow: hidden;
+    position: relative;
+  }
+  .bg-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 30pt 30pt;
+    pointer-events: none;
+  }
+  .header {
+    position: relative; z-index: 1;
+    display: flex;
+    align-items: baseline;
+    gap: 14pt;
+  }
+  .header h2 {
+    font-size: 30pt;
+    font-weight: 900;
+    background: linear-gradient(135deg, #00e676, #00c853);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .header .oneliner {
+    font-size: 13pt;
+    color: #90a4ae;
+  }
+  .flow {
+    position: relative; z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+  }
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6pt;
+    width: 100pt;
+  }
+  .step .icon {
+    width: 44pt; height: 44pt;
+    border-radius: 10pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22pt;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .step .label {
+    font-size: 11pt;
+    font-weight: 700;
+    text-align: center;
+  }
+  .step .sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8pt;
+    color: #78909c;
+  }
+  .arrow {
+    font-size: 16pt;
+    color: #ffd600;
+    margin: 0 4pt;
+    padding-bottom: 20pt;
+  }
+  .bottom-row {
+    position: relative; z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16pt;
+  }
+  .feature-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10pt;
+    padding: 18pt;
+    display: flex;
+    flex-direction: column;
+    gap: 6pt;
+  }
+  .feature-card .title {
+    font-size: 13pt;
+    font-weight: 700;
+    color: #ffd600;
+  }
+  .feature-card .desc {
+    font-size: 10pt;
+    color: #b0bec5;
+    line-height: 1.5;
+  }
+  .tech-row {
+    position: relative; z-index: 1;
+    display: flex;
+    justify-content: center;
+    gap: 10pt;
+    flex-wrap: wrap;
+  }
+  .tech-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9pt;
+    color: #b0bec5;
+    padding: 4pt 10pt;
+    border-radius: 4pt;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+</style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="header">
+    <h2>솔루션</h2>
+    <div class="oneliner">Slack 링크 자동 요약 & 카드뉴스</div>
+  </div>
+  <div class="flow">
+    <div class="step">
+      <div class="icon">🔗</div>
+      <div class="label">링크 공유</div>
+      <div class="sub">Slack 채널</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="step">
+      <div class="icon">👀</div>
+      <div class="label">감지</div>
+      <div class="sub">Bot 리액션</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="step">
+      <div class="icon">📝</div>
+      <div class="label">3줄 요약</div>
+      <div class="sub">✅ 스레드</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="step">
+      <div class="icon">🖼️</div>
+      <div class="label">카드뉴스</div>
+      <div class="sub">3장 이미지</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="step">
+      <div class="icon">🌐</div>
+      <div class="label">웹 피드</div>
+      <div class="sub">통합 조회</div>
+    </div>
+  </div>
+  <div class="bottom-row">
+    <div class="feature-card">
+      <div class="title">Slack Bot</div>
+      <div class="desc">링크 포함 메시지를 자동 감지하여 스레드에 불릿 3줄 요약과 카드뉴스 이미지 3장을 게시. 리액션으로 진행 상태 실시간 표시.</div>
+    </div>
+    <div class="feature-card">
+      <div class="title">웹앱 피드</div>
+      <div class="desc">인스타그램 스타일 피드에서 모든 워크스페이스의 링크를 통합 조회. 태그 검색, 채널 필터, 공유 링크 생성까지.</div>
+    </div>
+  </div>
+  <div class="tech-row">
+    <span class="tech-tag">Next.js</span>
+    <span class="tech-tag">Bolt for JS</span>
+    <span class="tech-tag">Supabase</span>
+    <span class="tech-tag">Gemini API</span>
+    <span class="tech-tag">Jina Reader</span>
+    <span class="tech-tag">Turborepo</span>
+  </div>
+</body>
+</html>

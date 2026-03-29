@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 720pt;
+    height: 405pt;
+    font-family: 'Pretendard', sans-serif;
+    background: #0a0e27;
+    color: #e8eaf6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .bg-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 30pt 30pt;
+    pointer-events: none;
+  }
+  .content {
+    position: relative; z-index: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16pt;
+  }
+  .emoji-logo { font-size: 40pt; }
+  h1 {
+    font-size: 52pt;
+    font-weight: 900;
+    letter-spacing: -1pt;
+    background: linear-gradient(135deg, #ffd600 0%, #ffab00 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.2;
+  }
+  .subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14pt;
+    color: #90a4ae;
+    letter-spacing: 1pt;
+  }
+  .team-info {
+    margin-top: 10pt;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8pt;
+  }
+  .team-name {
+    font-size: 14pt;
+    font-weight: 700;
+    color: #e8eaf6;
+  }
+  .members {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11pt;
+    color: #78909c;
+    display: flex;
+    gap: 20pt;
+  }
+  .github {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10pt;
+    color: #546e7a;
+    margin-top: 4pt;
+    padding: 5pt 12pt;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4pt;
+  }
+  .badge {
+    position: absolute;
+    bottom: 20pt;
+    right: 32pt;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9pt;
+    color: #ffd600;
+    opacity: 0.6;
+  }
+</style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="content">
+    <div class="emoji-logo">🥭</div>
+    <h1>Supermango</h1>
+    <div class="subtitle">Slack 링크 자동 요약 &amp; 카드뉴스</div>
+    <div class="team-info">
+      <div class="team-name">Team Supermango</div>
+      <div class="members">
+        <span>이용현 @YPD-ism</span>
+        <span>한대환 @dhan-iscream</span>
+      </div>
+      <div class="github">github.com/ProudBiz/supermango</div>
+    </div>
+  </div>
+  <div class="badge">Ralphthon Seoul 2026</div>
+</body>
+</html>

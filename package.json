@@ -18,5 +18,8 @@
     "vitest": "^4.1.2"
   },
   "license": "MIT",
-  "packageManager": "pnpm@10.12.3"
+  "packageManager": "pnpm@10.12.3",
+  "dependencies": {
+    "slides-grab": "^1.2.0"
+  }
 }

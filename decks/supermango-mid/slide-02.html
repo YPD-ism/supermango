@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 720pt;
+    height: 405pt;
+    font-family: 'Pretendard', sans-serif;
+    background: #0a0e27;
+    color: #e8eaf6;
+    padding: 32pt 40pt;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+  .bg-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 30pt 30pt;
+    pointer-events: none;
+  }
+  .header {
+    position: relative; z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 12pt;
+    margin-bottom: 20pt;
+  }
+  .header h2 {
+    font-size: 32pt;
+    font-weight: 900;
+    color: #ff1744;
+  }
+  .persona {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10pt;
+    color: #90a4ae;
+    padding: 5pt 12pt;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6pt;
+  }
+  .pain-grid {
+    position: relative; z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16pt;
+    flex: 1;
+  }
+  .pain-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10pt;
+    padding: 20pt;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+  .pain-card .number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 36pt;
+    font-weight: 900;
+    color: #ffd600;
+    line-height: 1;
+  }
+  .pain-card .desc {
+    font-size: 14pt;
+    font-weight: 700;
+    color: #e8eaf6;
+    line-height: 1.3;
+  }
+  .pain-card .label {
+    font-size: 11pt;
+    color: #90a4ae;
+    line-height: 1.5;
+  }
+  .bottom-quote {
+    position: relative; z-index: 1;
+    font-size: 13pt;
+    color: #ff8a80;
+    font-weight: 700;
+    text-align: center;
+    padding-top: 16pt;
+    margin-top: 16pt;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .bottom-quote span {
+    color: #546e7a;
+    font-weight: 400;
+    font-size: 10pt;
+  }
+</style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="header">
+    <h2>문제</h2>
+    <div class="persona">Slack 헤비 유저 · 멀티 프로젝트 · 의사결정자</div>
+  </div>
+  <div class="pain-grid">
+    <div class="pain-card">
+      <div class="number">15+</div>
+      <div class="desc">하루에 쌓이는 링크</div>
+      <div class="label">채널마다 쏟아지는 공유 링크, 읽어야 할 건 계속 늘어난다</div>
+    </div>
+    <div class="pain-card">
+      <div class="number">45분</div>
+      <div class="desc">매일 낭비되는 시간</div>
+      <div class="label">건당 3분 이상 소요, 그마저도 집중해서 읽지 못한다</div>
+    </div>
+    <div class="pain-card">
+      <div class="number">n회</div>
+      <div class="desc">컨텍스트 스위칭</div>
+      <div class="label">다른 관심사의 링크가 뒤섞여 집중력과 시간이 함께 증발</div>
+    </div>
+  </div>
+  <div class="bottom-quote">
+    "읽긴 읽는데, 집중해서 읽지 못합니다" <span>— 실제 동료의 고통 호소</span>
+  </div>
+</body>
+</html>

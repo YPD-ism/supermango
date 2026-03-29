@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 720pt;
+    height: 405pt;
+    font-family: 'Pretendard', sans-serif;
+    background: #0a0e27;
+    color: #e8eaf6;
+    padding: 28pt 40pt;
+    display: flex;
+    flex-direction: column;
+    gap: 16pt;
+    overflow: hidden;
+    position: relative;
+  }
+  .bg-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 30pt 30pt;
+    pointer-events: none;
+  }
+  .header h2 {
+    position: relative; z-index: 1;
+    font-size: 30pt;
+    font-weight: 900;
+    background: linear-gradient(135deg, #e040fb, #aa00ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .main-grid {
+    position: relative; z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16pt;
+  }
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10pt;
+    padding: 18pt;
+    display: flex;
+    flex-direction: column;
+    gap: 10pt;
+  }
+  .card .card-title {
+    font-size: 13pt;
+    font-weight: 700;
+    color: #ffd600;
+  }
+  .card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6pt;
+  }
+  .card li {
+    font-size: 10pt;
+    color: #b0bec5;
+    line-height: 1.4;
+    padding-left: 12pt;
+    position: relative;
+  }
+  .card li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: #78909c;
+  }
+  .card li strong { color: #e8eaf6; }
+  .loop-section {
+    position: relative; z-index: 1;
+    background: rgba(255,214,0,0.06);
+    border: 1px solid rgba(255,214,0,0.15);
+    border-radius: 10pt;
+    padding: 18pt;
+    display: flex;
+    flex-direction: column;
+    gap: 12pt;
+  }
+  .loop-section .card-title {
+    font-size: 13pt;
+    font-weight: 700;
+    color: #ffd600;
+  }
+  .loop-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8pt;
+  }
+  .loop-node {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11pt;
+    font-weight: 700;
+    padding: 8pt 14pt;
+    border-radius: 6pt;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #e8eaf6;
+  }
+  .loop-node.active {
+    background: rgba(255,214,0,0.15);
+    border-color: rgba(255,214,0,0.3);
+    color: #ffd600;
+  }
+  .loop-arrow {
+    font-size: 14pt;
+    color: #ffd600;
+  }
+  .loop-desc {
+    font-size: 10pt;
+    color: #90a4ae;
+    text-align: center;
+    line-height: 1.5;
+  }
+  .loop-desc code {
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(255,255,255,0.08);
+    padding: 2pt 6pt;
+    border-radius: 3pt;
+    color: #ffd600;
+  }
+</style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="header">
+    <h2>나의 랄프 세팅</h2>
+  </div>
+  <div class="main-grid">
+    <div class="card">
+      <div class="card-title">🤖 AI 에이전트 / 모델</div>
+      <ul>
+        <li><strong>Claude Code</strong> — 핵심 개발 에이전트</li>
+        <li><strong>Opus 4.6</strong> — 기획, 설계, 복잡한 판단</li>
+        <li><strong>Sonnet 4.6</strong> — 구현, 리뷰, 병렬 작업</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">🛠️ 워크플로우 툴</div>
+      <ul>
+        <li><strong>Superpowers</strong> — 스킬 기반 작업 자동화</li>
+        <li><strong>gstack</strong> — 헤드리스 브라우저 QA</li>
+        <li><strong>Context7</strong> — 최신 라이브러리 문서 조회</li>
+        <li><strong>frontend-skills</strong> — 프론트엔드 디자인</li>
+      </ul>
+    </div>
+  </div>
+  <div class="loop-section">
+    <div class="card-title">🔄 Ralph 루프 엔진 — 자율 반복 개발</div>
+    <div class="loop-flow">
+      <div class="loop-node active">Planner</div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node">Coder</div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node">Reviewer</div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node">QA</div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node active">Done</div>
+    </div>
+    <div class="loop-desc">
+      <code>pnpm loop</code> 한 줄로 headless 자율 반복 · 5회 실패 시 known_issue 분류 후 다음 태스크로 전진 · 모든 변경 자동 커밋
+    </div>
+  </div>
+</body>
+</html>
