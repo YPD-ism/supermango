@@ -20,6 +20,10 @@ vi.mock("@/lib/supabase/service", () => ({
   }),
 }));
 
+vi.mock("next/link", () => ({
+  default: ({ children, ...props }: Record<string, unknown>) => <a {...props}>{children as React.ReactNode}</a>,
+}));
+
 vi.mock("next/image", () => ({
   /* eslint-disable @typescript-eslint/no-unused-vars, @next/next/no-img-element, jsx-a11y/alt-text */
   default: ({ fill, unoptimized, sizes, ...rest }: Record<string, unknown>) => <img {...rest} />,

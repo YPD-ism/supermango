@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { createSupabaseServiceClient } from "@/lib/supabase/service";
 import ShareCard from "@/components/share-card";
 import { colors, fonts } from "@/lib/theme";
@@ -91,7 +92,7 @@ export default async function SharePage({ params }: Props) {
         >
           삭제되었거나 잘못된 링크입니다.
         </p>
-        <a
+        <Link
           href="/"
           style={{
             fontSize: "0.8125rem",
@@ -105,7 +106,7 @@ export default async function SharePage({ params }: Props) {
           }}
         >
           LinkDigest 홈으로
-        </a>
+        </Link>
       </div>
     );
   }
@@ -143,7 +144,7 @@ export default async function SharePage({ params }: Props) {
             maxWidth: "480px",
           }}
         >
-          <a
+          <Link
             href="/"
             style={{
               display: "block",
@@ -162,7 +163,7 @@ export default async function SharePage({ params }: Props) {
             }}
           >
             나도 써보기 →
-          </a>
+          </Link>
         </div>
       </main>
     </div>
