@@ -13,7 +13,7 @@
     {
       "id": "002-slack-link-summary",
       "title": "Slack 링크 자동 요약",
-      "status": "qa",
+      "status": "done",
       "tasks": [
         { "id": 1, "name": "Slack Bot 기본 설정 및 링크 감지", "status": "reviewer_pass" },
         { "id": 2, "name": "Jina Reader 콘텐츠 추출", "status": "reviewer_pass" },

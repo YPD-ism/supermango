@@ -143,3 +143,26 @@
 - **Status:** PASS
 - **CLAUDE.md update:** N/A — no new patterns or gotchas discovered
 - **Task DONE**
+
+### [QA] Round 1
+- **Story:** 002-slack-link-summary
+- **Status:** PASS
+- **Tests:** PASS — 74 tests passing (30 shared + 44 slack-bot)
+- **Lint/Typecheck/Build:** PASS — tsc (web + slack-bot), eslint, next build all clean with zero warnings
+- **QA — Live server:** N/A — backend Slack bot with no UI. All 11 acceptance criteria verified via code inspection:
+  1. ✅ public/private 채널 감지 — `link-detector.ts` allows `"channel"` and `"group"` types only
+  2. ✅ 👀 리액션 추가 — `index.ts:40-44` adds `eyes` reaction on detection
+  3. ✅ Jina Reader 콘텐츠 추출 — `jina-reader.ts` fetches with `Accept: text/markdown`, 30s timeout
+  4. ✅ Gemini 3줄 요약 + 태그 — `gemini-summarizer.ts` builds Korean prompt, structured JSON output
+  5. ✅ 스레드 불릿 요약 게시 — `formatSummaryMessage` creates `• line` format, posted with `thread_ts`
+  6. ✅ 👀→✅ 리액션 전환 — `index.ts:73-84` removes eyes, adds white_check_mark
+  7. ✅ 여러 링크 합산 요약 — `gemini-summarizer.ts:17-36` concatenates all URL content, single API call
+  8. ✅ 5개 초과 URL 안내 — `jina-reader.ts:52` slices to 5, `summary-pipeline.ts:82-83` formats skip notice
+  9. ✅ 실패 시 ❌ + 사유 안내 — `index.ts:90-108` adds `x` reaction and posts Korean error in thread
+  10. ✅ DM 무시 — `link-detector.ts:29` rejects `im` and `mpim` types
+  11. ✅ Supabase DB 저장 — `db.ts` upserts workspace/channel/user, inserts message/urls/tags
+- **Code quality (simplify):** PASS — three parallel review agents (reuse, quality, efficiency) found optimization opportunities (double extractUrls call, sequential reactions, client re-instantiation per call) but no functional bugs or code quality issues requiring fixes
+- **Security (manual):** PASS — URLs proxied through Jina Reader (no SSRF), Supabase parameterized queries (no SQL injection), no hardcoded secrets, error messages are own Korean strings (no internal leaks), service role key server-side only
+- **Design (gstack):** N/A — no UI component
+- **Spec alignment:** PASS — pipeline matches architecture (Jina → Gemini → DB), reaction flow (👀→✅/❌) matches spec, thread reply format matches spec, 5-URL cap with notice matches spec, DB schema matches data model, message status "summarized" correct (becomes "complete" after card news in story 003), demo scenario flow preserved
+- **Story DONE**
