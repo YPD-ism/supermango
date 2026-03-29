@@ -40,6 +40,8 @@ app.message(async ({ message, client, logger, context }) => {
   const urls = extractUrls(msgText ?? "");
   if (urls.length === 0) return;
 
+  const teamId = (context as { teamId?: string }).teamId ?? "unknown";
+
   // Add 👀 reaction to indicate processing
   try {
     await client.reactions.add({
@@ -57,7 +59,7 @@ app.message(async ({ message, client, logger, context }) => {
     channelId: message.channel,
     messageTs: message.ts,
     userId: (message as { user?: string }).user ?? "unknown",
-    teamId: (context as { teamId?: string }).teamId ?? "unknown",
+    teamId,
   });
 
   if (result.success && result.summary) {
@@ -97,27 +99,29 @@ app.message(async ({ message, client, logger, context }) => {
 
       const uploadResult = await uploadCardImages(
         cardBuffers,
-        (context as { teamId?: string }).teamId ?? "unknown",
+        teamId,
         message.channel,
         message.ts,
       );
 
       if (uploadResult.success && uploadResult.urls) {
-        // Post card images to Slack thread
-        for (const imageUrl of uploadResult.urls) {
-          await client.chat.postMessage({
-            channel: message.channel,
-            thread_ts: message.ts,
-            text: "카드뉴스",
-            blocks: [
-              {
-                type: "image",
-                image_url: imageUrl,
-                alt_text: "카드뉴스",
-              },
-            ],
-          });
-        }
+        // Post card images to Slack thread (parallel)
+        await Promise.all(
+          uploadResult.urls.map((imageUrl) =>
+            client.chat.postMessage({
+              channel: message.channel,
+              thread_ts: message.ts,
+              text: "카드뉴스",
+              blocks: [
+                {
+                  type: "image",
+                  image_url: imageUrl,
+                  alt_text: "카드뉴스",
+                },
+              ],
+            }),
+          ),
+        );
 
         // Add 🖼️ reaction
         await client.reactions.add({
