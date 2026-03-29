@@ -29,7 +29,7 @@
 
 ## Slide 4: 나의 랄프 세팅
 - **AI 에이전트/모델:**
-  - Claude Code (Opus 4.6 + Sonnet 4.6)
+  - Claude Code (Opus 4.6)
 - **워크플로우 툴:**
   - Superpowers, gstack, Context7, frontend-skills
 - **자체 Ralph 루프 엔진:**
