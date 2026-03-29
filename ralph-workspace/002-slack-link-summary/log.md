@@ -88,3 +88,21 @@
 - **Status:** PASS
 - **CLAUDE.md update:** N/A — no new patterns or gotchas discovered
 - **Task DONE**
+
+### [Coder] Round 5
+- **Task:** 요약 파이프라인 통합 및 스레드 응답
+- **Status:** DONE
+- **Files changed:**
+  - `apps/slack-bot/src/summary-pipeline.ts` — pipeline orchestration (runSummaryPipeline, formatSummaryMessage)
+  - `apps/slack-bot/src/db.ts` — Supabase DB save (saveSummaryResult: upsert workspace/channel/user, insert message/urls/tags)
+  - `apps/slack-bot/src/index.ts` — integrated pipeline into message handler with reaction flow (👀→✅/❌) and thread replies
+  - `apps/slack-bot/src/__tests__/summary-pipeline.test.ts` — 12 tests for pipeline and message formatting
+- **What was done:** Created `runSummaryPipeline` that orchestrates fetchContent → summarizeContent → saveSummaryResult with proper error handling. Tracks skipped URLs when >5 provided. `formatSummaryMessage` formats bullet-point summary with optional skipped URL notice. Updated `index.ts` message handler to run full pipeline: add 👀 on detection, run pipeline, post thread reply, swap to ✅ on success or ❌ + error message on failure. DB module upserts workspace/channel/user and inserts message/urls/tags with service role key.
+- **Self-validation:**
+  - ✅ 전체 파이프라인이 순차적으로 동작한다 — runSummaryPipeline chains Jina → Gemini → DB sequentially, 12 unit tests passing
+  - ✅ 스레드에 불릿 3줄 요약이 게시된다 — formatSummaryMessage creates "• line" format, posted via client.chat.postMessage with thread_ts
+  - ✅ 요약 완료 시 👀 제거, ✅ 추가 — reactions.remove("eyes") then reactions.add("white_check_mark") on success path
+  - ✅ 실패 시 ❌ 리액션 + 실패 사유 스레드 안내 — reactions.add("x") + error message thread on failure path
+  - ✅ 5개 초과 URL 시 안내 메시지 포함 — skippedUrlCount tracked, formatSummaryMessage appends "요약되지 않은 링크 N개" notice
+  - ✅ 결과가 Supabase DB에 저장된다 — saveSummaryResult upserts workspace/channel/user, inserts message/urls/tags with service role key
+- **CLAUDE.md update:** N/A — Supabase typed client with `as never` casts is a workaround for supabase-js v2.100 type resolution issues, but not a reusable pattern worth documenting
