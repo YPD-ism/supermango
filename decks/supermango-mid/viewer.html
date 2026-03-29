@@ -211,97 +211,135 @@
 <meta charset=&quot;UTF-8&quot;>
 <link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css&quot;>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&amp;display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&amp;display=swap');
+  :root {
+    --bg: #0A0A0A;
+    --surface: rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.08);
+    --text: #FFFFFF;
+    --text-secondary: #A1A1AA;
+    --text-muted: #71717A;
+    --gold: #FACC15;
+    --gold-glow: rgba(250,204,21,0.12);
+  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    width: 720pt;
-    height: 405pt;
-    font-family: 'Pretendard', sans-serif;
-    background: #0a0e27;
-    color: #e8eaf6;
+    width: 720pt; height: 405pt;
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
     overflow: hidden;
+    position: relative;
   }
-  .bg-grid {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-    background-size: 30pt 30pt;
+  /* subtle radial glow */
+  .glow {
+    position: absolute;
+    width: 400pt; height: 400pt;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, var(--gold-glow) 0%, transparent 60%);
     pointer-events: none;
   }
   .content {
-    position: relative; z-index: 1;
+    position: relative; z-index: 2;
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16pt;
+    gap: 20pt;
   }
-  .emoji-logo { font-size: 40pt; }
-  h1 {
+  .emoji-logo {
     font-size: 52pt;
+    filter: drop-shadow(0 0 24pt rgba(250,204,21,0.25));
+  }
+  h1 {
+    font-size: 60pt;
     font-weight: 900;
-    letter-spacing: -1pt;
-    background: linear-gradient(135deg, #ffd600 0%, #ffab00 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    line-height: 1.2;
+    letter-spacing: -2.5pt;
+    color: var(--gold);
+    line-height: 1.05;
   }
   .subtitle {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14pt;
-    color: #90a4ae;
-    letter-spacing: 1pt;
+    font-size: 16pt;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.5pt;
+  }
+  .divider {
+    width: 48pt; height: 2pt;
+    background: var(--gold);
+    opacity: 0.3;
+    border-radius: 1pt;
   }
   .team-info {
-    margin-top: 10pt;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8pt;
+    gap: 12pt;
   }
   .team-name {
     font-size: 14pt;
     font-weight: 700;
-    color: #e8eaf6;
+    color: var(--text);
+    letter-spacing: 2pt;
   }
   .members {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11pt;
-    color: #78909c;
+    font-size: 12pt;
+    color: var(--text-muted);
     display: flex;
-    gap: 20pt;
+    gap: 28pt;
+  }
+  .members span {
+    display: flex;
+    align-items: center;
+    gap: 8pt;
+  }
+  .members span::before {
+    content: '+';
+    color: var(--gold);
+    font-weight: 700;
+    opacity: 0.6;
   }
   .github {
     font-family: 'JetBrains Mono', monospace;
+    font-size: 11pt;
+    color: var(--text-muted);
+    padding: 6pt 16pt;
+    border: 1px solid var(--border);
+    border-radius: 20pt;
+    background: var(--surface);
+  }
+  .slide-num {
+    position: absolute;
+    top: 20pt; right: 28pt;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 10pt;
-    color: #546e7a;
-    margin-top: 4pt;
-    padding: 5pt 12pt;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 4pt;
+    color: var(--text-muted);
+    letter-spacing: 1pt;
   }
   .badge {
     position: absolute;
-    bottom: 20pt;
-    right: 32pt;
+    bottom: 20pt; left: 28pt;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9pt;
-    color: #ffd600;
-    opacity: 0.6;
+    font-size: 10pt;
+    color: var(--text-muted);
+    letter-spacing: 2pt;
+    text-transform: uppercase;
   }
 </style>
 </head>
 <body>
-  <div class=&quot;bg-grid&quot;></div>
+  <div class=&quot;glow&quot;></div>
+  <div class=&quot;slide-num&quot;>01 / 05</div>
   <div class=&quot;content&quot;>
     <div class=&quot;emoji-logo&quot;>🥭</div>
     <h1>Supermango</h1>
-    <div class=&quot;subtitle&quot;>Slack 링크 자동 요약 &amp;amp; 카드뉴스</div>
+    <div class=&quot;subtitle&quot;>Slack 링크 자동 요약 &amp; 카드뉴스</div>
+    <div class=&quot;divider&quot;></div>
     <div class=&quot;team-info&quot;>
       <div class=&quot;team-name&quot;>Team Supermango</div>
       <div class=&quot;members&quot;>
@@ -404,101 +442,122 @@
 <meta charset=&quot;UTF-8&quot;>
 <link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css&quot;>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&amp;display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&amp;display=swap');
+  :root {
+    --bg: #0A0A0A;
+    --surface: rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.08);
+    --text: #FFFFFF;
+    --text-secondary: #A1A1AA;
+    --text-muted: #71717A;
+    --gold: #FACC15;
+    --gold-glow: rgba(250,204,21,0.12);
+  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    width: 720pt;
-    height: 405pt;
-    font-family: 'Pretendard', sans-serif;
-    background: #0a0e27;
-    color: #e8eaf6;
-    padding: 32pt 40pt;
+    width: 720pt; height: 405pt;
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 36pt 44pt;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     position: relative;
   }
-  .bg-grid {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-    background-size: 30pt 30pt;
-    pointer-events: none;
+  .slide-num {
+    position: absolute;
+    top: 20pt; right: 28pt;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10pt;
+    color: var(--text-muted);
+    letter-spacing: 1pt;
+    z-index: 3;
   }
   .header {
-    position: relative; z-index: 1;
     display: flex;
     align-items: center;
-    gap: 12pt;
-    margin-bottom: 20pt;
+    gap: 16pt;
+    margin-bottom: 28pt;
   }
   .header h2 {
-    font-size: 32pt;
+    font-size: 36pt;
     font-weight: 900;
-    color: #ff1744;
+    color: var(--gold);
   }
   .persona {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10pt;
-    color: #90a4ae;
-    padding: 5pt 12pt;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 6pt;
+    font-size: 11pt;
+    font-weight: 600;
+    color: var(--text-muted);
+    padding: 6pt 16pt;
+    border: 1px solid var(--border);
+    border-radius: 20pt;
+    background: var(--surface);
   }
   .pain-grid {
-    position: relative; z-index: 1;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 16pt;
+    gap: 18pt;
     flex: 1;
   }
   .pain-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 10pt;
-    padding: 20pt;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12pt;
+    padding: 24pt 22pt;
     display: flex;
     flex-direction: column;
-    gap: 8pt;
+    gap: 12pt;
   }
   .pain-card .number {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 36pt;
-    font-weight: 900;
-    color: #ffd600;
+    font-size: 44pt;
+    font-weight: 700;
+    color: var(--gold);
     line-height: 1;
   }
   .pain-card .desc {
-    font-size: 14pt;
-    font-weight: 700;
-    color: #e8eaf6;
+    font-size: 16pt;
+    font-weight: 800;
+    color: var(--text);
     line-height: 1.3;
   }
   .pain-card .label {
-    font-size: 11pt;
-    color: #90a4ae;
+    font-size: 12pt;
+    color: var(--text-secondary);
     line-height: 1.5;
   }
   .bottom-quote {
-    position: relative; z-index: 1;
-    font-size: 13pt;
-    color: #ff8a80;
-    font-weight: 700;
-    text-align: center;
-    padding-top: 16pt;
-    margin-top: 16pt;
-    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12pt;
+    padding-top: 20pt;
+    margin-top: 18pt;
+    border-top: 1px solid var(--border);
   }
-  .bottom-quote span {
-    color: #546e7a;
-    font-weight: 400;
-    font-size: 10pt;
+  .bottom-quote .quote-mark {
+    font-size: 22pt;
+    color: var(--gold);
+    opacity: 0.4;
+    font-weight: 900;
+  }
+  .bottom-quote .quote-text {
+    font-size: 14pt;
+    color: var(--text-secondary);
+    font-weight: 700;
+    font-style: italic;
+  }
+  .bottom-quote .quote-attr {
+    font-size: 11pt;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
   }
 </style>
 </head>
 <body>
-  <div class=&quot;bg-grid&quot;></div>
+  <div class=&quot;slide-num&quot;>02 / 05</div>
   <div class=&quot;header&quot;>
     <h2>문제</h2>
     <div class=&quot;persona&quot;>Slack 헤비 유저 · 멀티 프로젝트 · 의사결정자</div>
@@ -521,7 +580,9 @@
     </div>
   </div>
   <div class=&quot;bottom-quote&quot;>
-    &quot;읽긴 읽는데, 집중해서 읽지 못합니다&quot; <span>— 실제 동료의 고통 호소</span>
+    <div class=&quot;quote-mark&quot;>&quot;</div>
+    <div class=&quot;quote-text&quot;>읽긴 읽는데, 집중해서 읽지 못합니다</div>
+    <div class=&quot;quote-attr&quot;>— 실제 동료의 고통 호소</div>
   </div>
 </body>
 </html>
@@ -615,113 +676,134 @@
 <meta charset=&quot;UTF-8&quot;>
 <link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css&quot;>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&amp;display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&amp;display=swap');
+  :root {
+    --bg: #0A0A0A;
+    --surface: rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.08);
+    --text: #FFFFFF;
+    --text-secondary: #A1A1AA;
+    --text-muted: #71717A;
+    --gold: #FACC15;
+    --gold-glow: rgba(250,204,21,0.12);
+  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    width: 720pt;
-    height: 405pt;
-    font-family: 'Pretendard', sans-serif;
-    background: #0a0e27;
-    color: #e8eaf6;
-    padding: 28pt 40pt;
+    width: 720pt; height: 405pt;
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 32pt 40pt;
     display: flex;
     flex-direction: column;
     gap: 16pt;
     overflow: hidden;
     position: relative;
   }
-  .bg-grid {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-    background-size: 30pt 30pt;
-    pointer-events: none;
+  .slide-num {
+    position: absolute;
+    top: 20pt; right: 28pt;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10pt;
+    color: var(--text-muted);
+    letter-spacing: 1pt;
+    z-index: 3;
   }
   .header {
-    position: relative; z-index: 1;
     display: flex;
     align-items: baseline;
-    gap: 14pt;
+    gap: 16pt;
   }
   .header h2 {
-    font-size: 30pt;
+    font-size: 36pt;
     font-weight: 900;
-    background: linear-gradient(135deg, #00e676, #00c853);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--gold);
   }
   .header .oneliner {
-    font-size: 13pt;
-    color: #90a4ae;
+    font-size: 14pt;
+    color: var(--text-secondary);
+    font-weight: 500;
   }
+  /* pipeline flow */
   .flow {
-    position: relative; z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0;
+    padding: 8pt 0;
   }
   .step {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6pt;
+    gap: 8pt;
     width: 100pt;
   }
   .step .icon {
-    width: 44pt; height: 44pt;
-    border-radius: 10pt;
+    width: 50pt; height: 50pt;
+    border-radius: 12pt;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22pt;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
+    font-size: 24pt;
+    background: var(--surface);
+    border: 1px solid var(--border);
   }
   .step .label {
-    font-size: 11pt;
+    font-size: 13pt;
     font-weight: 700;
     text-align: center;
+    color: var(--text);
   }
   .step .sub {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 8pt;
-    color: #78909c;
+    font-size: 10pt;
+    color: var(--text-muted);
   }
   .arrow {
+    font-family: 'JetBrains Mono', monospace;
     font-size: 16pt;
-    color: #ffd600;
-    margin: 0 4pt;
-    padding-bottom: 20pt;
+    color: var(--gold);
+    margin: 0 2pt;
+    padding-bottom: 24pt;
+    opacity: 0.5;
   }
+  /* feature cards */
   .bottom-row {
-    position: relative; z-index: 1;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16pt;
   }
   .feature-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 10pt;
-    padding: 18pt;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12pt;
+    padding: 20pt 22pt;
     display: flex;
     flex-direction: column;
-    gap: 6pt;
+    gap: 10pt;
   }
   .feature-card .title {
-    font-size: 13pt;
+    font-size: 14pt;
     font-weight: 700;
-    color: #ffd600;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 8pt;
+  }
+  .feature-card .title::before {
+    content: '+';
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    opacity: 0.6;
   }
   .feature-card .desc {
-    font-size: 10pt;
-    color: #b0bec5;
-    line-height: 1.5;
+    font-size: 12pt;
+    color: var(--text-secondary);
+    line-height: 1.6;
   }
+  /* tech tags */
   .tech-row {
-    position: relative; z-index: 1;
     display: flex;
     justify-content: center;
     gap: 10pt;
@@ -729,20 +811,21 @@
   }
   .tech-tag {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9pt;
-    color: #b0bec5;
-    padding: 4pt 10pt;
-    border-radius: 4pt;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
+    font-size: 10pt;
+    font-weight: 600;
+    color: var(--text-muted);
+    padding: 5pt 12pt;
+    border-radius: 20pt;
+    background: var(--surface);
+    border: 1px solid var(--border);
   }
 </style>
 </head>
 <body>
-  <div class=&quot;bg-grid&quot;></div>
+  <div class=&quot;slide-num&quot;>03 / 05</div>
   <div class=&quot;header&quot;>
     <h2>솔루션</h2>
-    <div class=&quot;oneliner&quot;>Slack 링크 자동 요약 &amp; 카드뉴스</div>
+    <div class=&quot;oneliner&quot;>LinkDigest — Slack 링크 자동 요약 &amp; 카드뉴스</div>
   </div>
   <div class=&quot;flow&quot;>
     <div class=&quot;step&quot;>
@@ -760,7 +843,7 @@
     <div class=&quot;step&quot;>
       <div class=&quot;icon&quot;>📝</div>
       <div class=&quot;label&quot;>3줄 요약</div>
-      <div class=&quot;sub&quot;>✅ 스레드</div>
+      <div class=&quot;sub&quot;>스레드 응답</div>
     </div>
     <div class=&quot;arrow&quot;>→</div>
     <div class=&quot;step&quot;>
@@ -778,11 +861,11 @@
   <div class=&quot;bottom-row&quot;>
     <div class=&quot;feature-card&quot;>
       <div class=&quot;title&quot;>Slack Bot</div>
-      <div class=&quot;desc&quot;>링크 포함 메시지를 자동 감지하여 스레드에 불릿 3줄 요약과 카드뉴스 이미지 3장을 게시. 리액션으로 진행 상태 실시간 표시.</div>
+      <div class=&quot;desc&quot;>링크 포함 메시지 자동 감지 → 스레드에 3줄 요약과 카드뉴스 이미지 3장 게시. 리액션으로 진행 상태 표시.</div>
     </div>
     <div class=&quot;feature-card&quot;>
       <div class=&quot;title&quot;>웹앱 피드</div>
-      <div class=&quot;desc&quot;>인스타그램 스타일 피드에서 모든 워크스페이스의 링크를 통합 조회. 태그 검색, 채널 필터, 공유 링크 생성까지.</div>
+      <div class=&quot;desc&quot;>인스타그램 스타일 피드에서 모든 워크스페이스의 링크 통합 조회. 태그 검색, 채널 필터, 공유 링크 생성.</div>
     </div>
   </div>
   <div class=&quot;tech-row&quot;>
@@ -885,91 +968,107 @@
 <meta charset=&quot;UTF-8&quot;>
 <link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css&quot;>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&amp;display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&amp;display=swap');
+  :root {
+    --bg: #0A0A0A;
+    --surface: rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.08);
+    --text: #FFFFFF;
+    --text-secondary: #A1A1AA;
+    --text-muted: #71717A;
+    --gold: #FACC15;
+    --gold-dim: rgba(250,204,21,0.06);
+    --gold-border: rgba(250,204,21,0.15);
+  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    width: 720pt;
-    height: 405pt;
-    font-family: 'Pretendard', sans-serif;
-    background: #0a0e27;
-    color: #e8eaf6;
-    padding: 28pt 40pt;
+    width: 720pt; height: 405pt;
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 32pt 40pt;
     display: flex;
     flex-direction: column;
     gap: 16pt;
     overflow: hidden;
     position: relative;
   }
-  .bg-grid {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-    background-size: 30pt 30pt;
-    pointer-events: none;
+  .slide-num {
+    position: absolute;
+    top: 20pt; right: 28pt;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10pt;
+    color: var(--text-muted);
+    letter-spacing: 1pt;
+    z-index: 3;
   }
   .header h2 {
-    position: relative; z-index: 1;
-    font-size: 30pt;
+    font-size: 36pt;
     font-weight: 900;
-    background: linear-gradient(135deg, #e040fb, #aa00ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--gold);
   }
   .main-grid {
-    position: relative; z-index: 1;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16pt;
   }
   .card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 10pt;
-    padding: 18pt;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12pt;
+    padding: 20pt 22pt;
     display: flex;
     flex-direction: column;
-    gap: 10pt;
+    gap: 14pt;
   }
   .card .card-title {
-    font-size: 13pt;
+    font-size: 14pt;
     font-weight: 700;
-    color: #ffd600;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 8pt;
   }
   .card ul {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 6pt;
+    gap: 8pt;
   }
   .card li {
-    font-size: 10pt;
-    color: #b0bec5;
+    font-size: 12pt;
+    color: var(--text-secondary);
     line-height: 1.4;
-    padding-left: 12pt;
+    padding-left: 16pt;
     position: relative;
   }
   .card li::before {
-    content: '▸';
+    content: '+';
     position: absolute;
-    left: 0;
-    color: #78909c;
+    left: 0; top: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--gold);
+    opacity: 0.5;
   }
-  .card li strong { color: #e8eaf6; }
+  .card li strong {
+    color: var(--text);
+    font-weight: 700;
+  }
+  /* loop section */
   .loop-section {
-    position: relative; z-index: 1;
-    background: rgba(255,214,0,0.06);
-    border: 1px solid rgba(255,214,0,0.15);
-    border-radius: 10pt;
-    padding: 18pt;
+    background: var(--gold-dim);
+    border: 1px solid var(--gold-border);
+    border-radius: 12pt;
+    padding: 20pt 26pt;
     display: flex;
     flex-direction: column;
-    gap: 12pt;
+    gap: 14pt;
   }
   .loop-section .card-title {
-    font-size: 13pt;
+    font-size: 14pt;
     font-weight: 700;
-    color: #ffd600;
+    color: var(--gold);
   }
   .loop-flow {
     display: flex;
@@ -979,46 +1078,50 @@
   }
   .loop-node {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11pt;
+    font-size: 12pt;
     font-weight: 700;
-    padding: 8pt 14pt;
-    border-radius: 6pt;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.12);
-    color: #e8eaf6;
+    padding: 8pt 16pt;
+    border-radius: 8pt;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
   }
   .loop-node.active {
-    background: rgba(255,214,0,0.15);
-    border-color: rgba(255,214,0,0.3);
-    color: #ffd600;
+    background: rgba(250,204,21,0.08);
+    border-color: var(--gold-border);
+    color: var(--gold);
   }
   .loop-arrow {
+    font-family: 'JetBrains Mono', monospace;
     font-size: 14pt;
-    color: #ffd600;
+    color: var(--gold);
+    opacity: 0.4;
   }
   .loop-desc {
-    font-size: 10pt;
-    color: #90a4ae;
+    font-size: 12pt;
+    color: var(--text-secondary);
     text-align: center;
-    line-height: 1.5;
+    line-height: 1.6;
   }
   .loop-desc code {
     font-family: 'JetBrains Mono', monospace;
-    background: rgba(255,255,255,0.08);
-    padding: 2pt 6pt;
-    border-radius: 3pt;
-    color: #ffd600;
+    background: rgba(250,204,21,0.06);
+    padding: 2pt 8pt;
+    border-radius: 4pt;
+    color: var(--gold);
+    font-size: 11pt;
+    font-weight: 600;
   }
 </style>
 </head>
 <body>
-  <div class=&quot;bg-grid&quot;></div>
+  <div class=&quot;slide-num&quot;>04 / 05</div>
   <div class=&quot;header&quot;>
     <h2>나의 랄프 세팅</h2>
   </div>
   <div class=&quot;main-grid&quot;>
     <div class=&quot;card&quot;>
-      <div class=&quot;card-title&quot;>🤖 AI 에이전트 / 모델</div>
+      <div class=&quot;card-title&quot;>AI 에이전트 / 모델</div>
       <ul>
         <li><strong>Claude Code</strong> — 핵심 개발 에이전트</li>
         <li><strong>Opus 4.6</strong> — 기획, 설계, 복잡한 판단</li>
@@ -1026,7 +1129,7 @@
       </ul>
     </div>
     <div class=&quot;card&quot;>
-      <div class=&quot;card-title&quot;>🛠️ 워크플로우 툴</div>
+      <div class=&quot;card-title&quot;>워크플로우 툴</div>
       <ul>
         <li><strong>Superpowers</strong> — 스킬 기반 작업 자동화</li>
         <li><strong>gstack</strong> — 헤드리스 브라우저 QA</li>
@@ -1036,7 +1139,7 @@
     </div>
   </div>
   <div class=&quot;loop-section&quot;>
-    <div class=&quot;card-title&quot;>🔄 Ralph 루프 엔진 — 자율 반복 개발</div>
+    <div class=&quot;card-title&quot;>Ralph 루프 엔진 — 자율 반복 개발</div>
     <div class=&quot;loop-flow&quot;>
       <div class=&quot;loop-node active&quot;>Planner</div>
       <div class=&quot;loop-arrow&quot;>→</div>
@@ -1049,7 +1152,7 @@
       <div class=&quot;loop-node active&quot;>Done</div>
     </div>
     <div class=&quot;loop-desc&quot;>
-      <code>pnpm loop</code> 한 줄로 headless 자율 반복 · 5회 실패 시 known_issue 분류 후 다음 태스크로 전진 · 모든 변경 자동 커밋
+      <code>pnpm loop</code> 한 줄로 headless 자율 반복 · 5회 실패 시 known_issue 분류 후 다음 태스크로 전진
     </div>
   </div>
 </body>
@@ -1144,64 +1247,70 @@
 <meta charset=&quot;UTF-8&quot;>
 <link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css&quot;>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&amp;display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&amp;display=swap');
+  :root {
+    --bg: #0A0A0A;
+    --surface: rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.08);
+    --text: #FFFFFF;
+    --text-secondary: #A1A1AA;
+    --text-muted: #71717A;
+    --gold: #FACC15;
+    --gold-glow: rgba(250,204,21,0.12);
+    --green: #22C55E;
+  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    width: 720pt;
-    height: 405pt;
-    font-family: 'Pretendard', sans-serif;
-    background: #0a0e27;
-    color: #e8eaf6;
-    padding: 28pt 40pt;
+    width: 720pt; height: 405pt;
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 32pt 40pt;
     display: flex;
     flex-direction: column;
     gap: 14pt;
     overflow: hidden;
     position: relative;
   }
-  .bg-grid {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-    background-size: 30pt 30pt;
-    pointer-events: none;
+  .slide-num {
+    position: absolute;
+    top: 20pt; right: 28pt;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10pt;
+    color: var(--text-muted);
+    letter-spacing: 1pt;
+    z-index: 3;
   }
   .header-row {
-    position: relative; z-index: 1;
     display: flex;
     align-items: baseline;
     justify-content: space-between;
   }
   .header-row h2 {
-    font-size: 30pt;
+    font-size: 36pt;
     font-weight: 900;
-    background: linear-gradient(135deg, #ffd600, #ffab00);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--gold);
   }
   .header-row .stat {
     font-family: 'JetBrains Mono', monospace;
     font-size: 16pt;
-    font-weight: 900;
-    color: #00e676;
+    font-weight: 700;
+    color: var(--green);
   }
+  /* progress bar */
   .progress-bar-container {
-    position: relative; z-index: 1;
-    width: 100%;
-    height: 10pt;
-    background: rgba(255,255,255,0.06);
-    border-radius: 5pt;
+    width: 100%; height: 6pt;
+    background: rgba(255,255,255,0.04);
+    border-radius: 3pt;
     overflow: hidden;
   }
   .progress-bar {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, #00e676 0%, #ffd600 100%);
-    border-radius: 5pt;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, var(--green), var(--gold));
+    border-radius: 3pt;
   }
+  /* stories grid */
   .stories-grid {
-    position: relative; z-index: 1;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8pt;
@@ -1210,44 +1319,55 @@
   .story-item {
     display: flex;
     align-items: center;
-    gap: 8pt;
-    padding: 8pt 12pt;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 6pt;
+    gap: 10pt;
+    padding: 10pt 14pt;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8pt;
   }
   .story-item .check {
     font-size: 12pt;
     flex-shrink: 0;
   }
   .story-item .story-title {
-    font-size: 10pt;
-    color: #e8eaf6;
+    font-size: 12pt;
+    color: var(--text);
     flex: 1;
+    font-weight: 500;
   }
   .story-item .tasks-count {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 8pt;
-    color: #546e7a;
+    font-size: 10pt;
+    font-weight: 600;
+    color: var(--text-muted);
     flex-shrink: 0;
+    background: rgba(255,255,255,0.04);
+    padding: 3pt 8pt;
+    border-radius: 10pt;
+  }
+  /* bottom */
+  .bottom-section {
+    text-align: center;
+    padding-top: 12pt;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
   }
   .bottom-message {
-    position: relative; z-index: 1;
-    text-align: center;
-    font-size: 18pt;
+    font-size: 22pt;
     font-weight: 900;
-    color: #ffd600;
+    color: var(--gold);
   }
   .bottom-sub {
-    position: relative; z-index: 1;
-    text-align: center;
-    font-size: 10pt;
-    color: #78909c;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11pt;
+    color: var(--text-muted);
   }
 </style>
 </head>
 <body>
-  <div class=&quot;bg-grid&quot;></div>
+  <div class=&quot;slide-num&quot;>05 / 05</div>
   <div class=&quot;header-row&quot;>
     <h2>현재 진행 상황</h2>
     <div class=&quot;stat&quot;>9/9 Stories · 18/18 Tasks</div>
@@ -1302,8 +1422,10 @@
       <div class=&quot;tasks-count&quot;>1</div>
     </div>
   </div>
-  <div class=&quot;bottom-message&quot;>전체 기능 구현 완료</div>
-  <div class=&quot;bottom-sub&quot;>Planner → Coder → Reviewer → QA — Ralph 루프로 자율 구현</div>
+  <div class=&quot;bottom-section&quot;>
+    <div class=&quot;bottom-message&quot;>전체 기능 구현 완료</div>
+    <div class=&quot;bottom-sub&quot;>Planner → Coder → Reviewer → QA — Ralph 루프로 자율 구현</div>
+  </div>
 </body>
 </html>
 " sandbox="allow-same-origin"></iframe>
