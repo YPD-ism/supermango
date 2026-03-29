@@ -82,3 +82,25 @@
 - **Spec alignment:** PASS — matches architecture (Supabase Storage + DB update), data model (card_images[] + status=complete), reaction flow (👀→✅→🖼️), demo scenario
 - **CLAUDE.md update:** N/A — no new project-wide patterns discovered
 - **Task DONE**
+
+### [QA] Round 1
+- **Story:** 003-card-news-generation
+- **Status:** ISSUES
+- **Tests:** PASS — all 55 slack-bot tests pass, all 30 shared tests pass (85 total)
+- **Lint/Typecheck/Build:** PASS — all clean with zero warnings
+- **QA — Cross-task integration:** PASS — all 6 story acceptance criteria verified against code:
+  - ✅ 요약 완료 후 비동기로 카드뉴스 이미지 3장 생성 (generateCardImages in try-catch after ✅)
+  - ✅ Supabase Storage `card-images` 버킷에 업로드 (uploadCardImages with Promise.all)
+  - ✅ Slack 스레드에 별도 메시지로 게시 (chat.postMessage with image blocks)
+  - ✅ 🖼️ 리액션 추가 (reactions.add frame_with_picture)
+  - ✅ DB message 상태 complete 업데이트 + 이미지 URL 저장 (updateMessageWithCardImages)
+  - ✅ 카드뉴스 생성 실패 시 요약 유지 (separate try-catch after ✅ reaction)
+- **Code quality (simplify):** 2 issues found:
+  1. **Sequential image posting:** `index.ts:107-120` — 3 card images posted to Slack sequentially in a for-loop. These are independent API calls and should use `Promise.all()` for ~2x faster posting.
+  2. **Duplicate teamId extraction:** `index.ts:60` and `index.ts:100` both extract `(context as { teamId?: string }).teamId ?? "unknown"` — should extract once into a variable at the top of the handler.
+- **Security (manual):** PASS — no injection risks (satori object markup, Supabase SDK parameterized queries), no hardcoded secrets, error messages don't leak internals, all external inputs from trusted Slack context
+- **Design (gstack):** N/A — backend service, no UI
+- **Spec alignment:** PASS — matches architecture (satori+resvg server-side rendering), data model (card_images[] + status=complete), storage (card-images bucket), reaction flow (👀→✅→🖼️), async separation, demo scenario
+- **Findings:**
+  1. `index.ts:107-120` — Change sequential `for...of` loop posting card images to `Promise.all()` for concurrency
+  2. `index.ts:60,100` — Extract `teamId` once at the top of the handler instead of duplicating the cast+fallback expression
