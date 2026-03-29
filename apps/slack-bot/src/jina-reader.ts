@@ -9,8 +9,10 @@ export interface ContentResult {
   error?: string;
 }
 
-async function fetchSingleUrl(url: string): Promise<ContentResult> {
-  const apiKey = process.env.JINA_API_KEY;
+async function fetchSingleUrl(
+  url: string,
+  apiKey: string,
+): Promise<ContentResult> {
   try {
     const response = await fetch(`${JINA_READER_BASE}${url}`, {
       headers: {
@@ -42,6 +44,11 @@ async function fetchSingleUrl(url: string): Promise<ContentResult> {
 export async function fetchContent(urls: string[]): Promise<ContentResult[]> {
   if (urls.length === 0) return [];
 
+  const apiKey = process.env.JINA_API_KEY;
+  if (!apiKey) {
+    throw new Error("JINA_API_KEY environment variable is not set");
+  }
+
   const limited = urls.slice(0, MAX_URLS);
-  return Promise.all(limited.map(fetchSingleUrl));
+  return Promise.all(limited.map((url) => fetchSingleUrl(url, apiKey)));
 }

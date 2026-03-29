@@ -172,4 +172,13 @@ describe("fetchContent", () => {
     expect(results).toHaveLength(0);
     expect(mockFetch).not.toHaveBeenCalled();
   });
+
+  it("throws if JINA_API_KEY is not set", async () => {
+    vi.stubEnv("JINA_API_KEY", "");
+
+    await expect(fetchContent(["https://example.com"])).rejects.toThrow(
+      "JINA_API_KEY",
+    );
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
 });
