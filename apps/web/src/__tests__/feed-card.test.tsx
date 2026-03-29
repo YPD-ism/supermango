@@ -116,7 +116,7 @@ describe("FeedCard", () => {
 
     beforeEach(() => {
       fetchSpy = vi.fn();
-      global.fetch = fetchSpy;
+      global.fetch = fetchSpy as typeof global.fetch;
       Object.assign(navigator, {
         clipboard: { writeText: vi.fn().mockResolvedValue(undefined) },
       });
