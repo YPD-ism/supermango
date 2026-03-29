@@ -35,3 +35,15 @@
   - ✅ 최대 5개 URL만 처리한다 — urls.slice(0, MAX_URLS) with MAX_URLS=5, tested with 8 URLs → 5 results
   - ✅ 타임아웃, 404, 페이월 등 실패 케이스를 처리한다 — HTTP errors (404, 403, 500) and network errors return {success: false, error: "..."}, tested
 - **CLAUDE.md update:** N/A — Jina Reader API usage is straightforward, no non-obvious gotchas discovered
+
+### [Reviewer] Round 2
+- **Task:** Jina Reader 콘텐츠 추출
+- **Status:** ISSUES
+- **Tests:** PASS — 54 tests passing (30 shared + 24 slack-bot including 9 jina-reader tests)
+- **Lint/Typecheck/Build:** PASS — tsc, eslint, next build all clean with zero warnings
+- **QA — Live server:** N/A — backend service with no UI. Acceptance criteria verified via unit tests covering all specified scenarios (single URL, multiple URLs, 5-URL limit, 404/403/500 errors, network timeouts, mixed results, empty input).
+- **Code quality (simplify):** ISSUE — `fetchSingleUrl` reads `process.env.JINA_API_KEY` on every invocation (up to 5 times per call). More critically, if `JINA_API_KEY` is unset, the header silently becomes `"Bearer undefined"` and all fetches will fail with confusing 401/403 errors from Jina instead of a clear missing-config error. Fix: read the API key once in `fetchContent`, throw early if missing.
+- **Security (manual):** PASS — no injection risks, no hardcoded secrets, URLs proxied through Jina Reader (no direct SSRF), error messages don't leak internals.
+- **Design (gstack):** N/A — no UI component
+- **Spec alignment:** PASS — matches architecture decisions (Jina Reader for URL→markdown), 5-URL cap aligns with non-goal of >6 URLs, concurrent fetching appropriate for data flow, failure info structured for downstream pipeline.
+- **CLAUDE.md update:** N/A — no new patterns or gotchas discovered
