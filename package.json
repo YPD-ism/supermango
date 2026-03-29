@@ -4,8 +4,16 @@
   "private": true,
   "description": "Ralph loop engine with planner, coder, and reviewer",
   "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
     "loop": "bash ralph-engine/ralph-loop.sh",
     "loop:once": "bash ralph-engine/ralph-once.sh"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.3"
   },
   "license": "MIT",
   "packageManager": "pnpm@10.12.3"
