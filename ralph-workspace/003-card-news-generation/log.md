@@ -119,3 +119,25 @@
   - ✅ All 55 slack-bot tests pass
   - ✅ Typecheck clean
 - **CLAUDE.md update:** N/A — minor refactoring, no new patterns
+
+### [QA] Round 2
+- **Story:** 003-card-news-generation
+- **Status:** PASS
+- **Tests:** PASS — all 55 slack-bot tests pass, all 30 shared tests pass (85 total)
+- **Lint/Typecheck/Build:** PASS — all clean with zero warnings
+- **QA — Cross-task integration:** PASS — all 6 story acceptance criteria verified:
+  - ✅ 요약 완료 후 비동기로 카드뉴스 이미지 3장 생성 (generateCardImages in try-catch after ✅)
+  - ✅ Supabase Storage `card-images` 버킷에 업로드 (uploadCardImages with Promise.all)
+  - ✅ Slack 스레드에 별도 메시지로 게시 (chat.postMessage with image blocks, now parallel via Promise.all)
+  - ✅ 🖼️ 리액션 추가 (reactions.add frame_with_picture)
+  - ✅ DB message 상태 complete 업데이트 + 이미지 URL 저장 (updateMessageWithCardImages)
+  - ✅ 카드뉴스 생성 실패 시 요약 유지 (separate try-catch after ✅ reaction)
+- **QA fix verification:** Both QA Round 1 findings confirmed fixed:
+  - ✅ Card image posting parallelized with Promise.all (index.ts:109-124)
+  - ✅ teamId extracted once at top of handler (index.ts:43), used at lines 62 and 102
+- **Code quality (simplify):** PASS — no regressions. Agents flagged pre-existing style items (stringly-typed reactions, WHAT-comments, `as never` casts) that predate this story and are not worth addressing here.
+- **Security (manual):** PASS — no injection risks (satori object markup, Supabase SDK parameterized queries), no hardcoded secrets, error messages don't leak internals, all external inputs from trusted Slack context
+- **Design (gstack):** N/A — backend service, no UI
+- **Spec alignment:** PASS — matches architecture (satori+resvg server-side rendering, Supabase Storage), data model (card_images[] + status=complete), reaction flow (👀→✅→🖼️), async separation, demo scenario
+- **CLAUDE.md update:** N/A — no new project-wide patterns discovered
+- **Story DONE**
