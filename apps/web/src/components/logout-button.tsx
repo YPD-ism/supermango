@@ -22,7 +22,7 @@ export default function LogoutButton() {
         fontWeight: 600,
         color: colors.textMuted,
         backgroundColor: "transparent",
-        border: "1px solid #334155",
+        border: `1px solid ${colors.borderSubtle}`,
         borderRadius: "0.375rem",
         cursor: "pointer",
       }}

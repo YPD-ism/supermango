@@ -4,6 +4,7 @@ export const colors = {
   textMuted: "#94a3b8",
   accent: "#facc15",
   border: "#1e293b",
+  borderSubtle: "#334155",
 } as const;
 
 export const fonts = {
