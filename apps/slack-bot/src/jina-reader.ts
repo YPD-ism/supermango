@@ -1,4 +1,4 @@
-const MAX_URLS = 5;
+export const MAX_URLS = 5;
 const TIMEOUT_MS = 30_000;
 const JINA_READER_BASE = "https://r.jina.ai/";
 

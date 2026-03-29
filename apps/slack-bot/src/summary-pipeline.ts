@@ -1,8 +1,6 @@
-import { fetchContent } from "./jina-reader.js";
+import { fetchContent, MAX_URLS } from "./jina-reader.js";
 import { summarizeContent, type ContentInput } from "./gemini-summarizer.js";
 import { saveSummaryResult } from "./db.js";
-
-const MAX_URLS = 5;
 
 export interface PipelineContext {
   urls: string[];
@@ -63,8 +61,8 @@ export async function runSummaryPipeline(
       summary: summaryResult.summary!,
       tags: summaryResult.tags!,
     });
-  } catch {
-    // Log but don't fail — the summary was already generated
+  } catch (error) {
+    console.error("Failed to save summary to DB:", error);
   }
 
   return {

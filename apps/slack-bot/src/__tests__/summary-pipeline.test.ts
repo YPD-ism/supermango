@@ -5,6 +5,7 @@ import type { SummaryResult } from "../gemini-summarizer.js";
 // Mock dependencies
 vi.mock("../jina-reader.js", () => ({
   fetchContent: vi.fn(),
+  MAX_URLS: 5,
 }));
 vi.mock("../gemini-summarizer.js", () => ({
   summarizeContent: vi.fn(),
