@@ -41,6 +41,20 @@ app.message(async ({ message, client, logger, context }) => {
   if (urls.length === 0) return;
 
   const teamId = (context as { teamId?: string }).teamId ?? "unknown";
+  const userId = (message as { user?: string }).user ?? "unknown";
+
+  // Resolve workspace, channel, and user names from Slack API (best-effort)
+  const [teamName, channelName, userName] = await Promise.all([
+    client.team.info({ team: teamId })
+      .then((r) => r.team?.name)
+      .catch(() => undefined),
+    client.conversations.info({ channel: message.channel })
+      .then((r) => r.channel?.name)
+      .catch(() => undefined),
+    client.users.info({ user: userId })
+      .then((r) => r.user?.real_name || r.user?.name)
+      .catch(() => undefined),
+  ]);
 
   // Add 👀 reaction to indicate processing
   try {
@@ -58,8 +72,11 @@ app.message(async ({ message, client, logger, context }) => {
     urls,
     channelId: message.channel,
     messageTs: message.ts,
-    userId: (message as { user?: string }).user ?? "unknown",
+    userId,
     teamId,
+    teamName,
+    channelName,
+    userName,
   });
 
   if (result.success && result.summary) {

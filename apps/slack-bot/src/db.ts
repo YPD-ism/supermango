@@ -8,6 +8,9 @@ export interface SaveSummaryInput {
   urls: string[];
   summary: string[];
   tags: string[];
+  teamName?: string;
+  channelName?: string;
+  userName?: string;
 }
 
 /**
@@ -21,7 +24,7 @@ export async function saveSummaryResult(input: SaveSummaryInput): Promise<void> 
   const { data: workspace, error: wsError } = await supabase
     .from("workspaces")
     .upsert(
-      { slack_team_id: input.teamId, name: input.teamId } as never,
+      { slack_team_id: input.teamId, name: input.teamName ?? input.teamId } as never,
       { onConflict: "slack_team_id" },
     )
     .select("id")
@@ -37,7 +40,7 @@ export async function saveSummaryResult(input: SaveSummaryInput): Promise<void> 
       {
         workspace_id: workspaceId,
         slack_channel_id: input.channelId,
-        name: input.channelId,
+        name: input.channelName ?? input.channelId,
       } as never,
       { onConflict: "workspace_id,slack_channel_id" },
     )
@@ -54,7 +57,7 @@ export async function saveSummaryResult(input: SaveSummaryInput): Promise<void> 
       {
         workspace_id: workspaceId,
         slack_user_id: input.userId,
-        display_name: input.userId,
+        display_name: input.userName ?? input.userId,
       } as never,
       { onConflict: "workspace_id,slack_user_id" },
     )

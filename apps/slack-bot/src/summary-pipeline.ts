@@ -8,6 +8,9 @@ export interface PipelineContext {
   messageTs: string;
   userId: string;
   teamId: string;
+  teamName?: string;
+  channelName?: string;
+  userName?: string;
 }
 
 export interface PipelineResult {
@@ -60,6 +63,9 @@ export async function runSummaryPipeline(
       urls: ctx.urls,
       summary: summaryResult.summary!,
       tags: summaryResult.tags!,
+      teamName: ctx.teamName,
+      channelName: ctx.channelName,
+      userName: ctx.userName,
     });
   } catch (error) {
     console.error("Failed to save summary to DB:", error);
